@@ -49,6 +49,15 @@ namespace MK
 
             return Vector2.zero;
         }
+
+        public static Vector3 GetRandomPositionInBounds(Bounds bounds)
+        {
+            return new Vector3(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y),
+                Random.Range(bounds.min.z, bounds.max.z)
+            );
+        }
     }
 
     [System.Serializable]

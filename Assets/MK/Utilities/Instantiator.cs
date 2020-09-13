@@ -23,5 +23,12 @@ namespace MK
                 SpawnRandomObjectFromList();
             }
         }
+
+        public void SpawnObjectOnChance(float percentage)
+        {
+            if (Random.Range(0f, 1f) > percentage) return;
+
+            SpawnRandomObjectFromList();
+        }
     }
 }

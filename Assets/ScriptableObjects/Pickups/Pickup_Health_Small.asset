@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48f27ccfd1a1f7a4fa298b5437c779a0, type: 3}
-  m_Name: Pickup_Weapon_AutomaticBlaster
+  m_Script: {fileID: 11500000, guid: f7e40cb0307e5f249a785a42a769f5eb, type: 3}
+  m_Name: Pickup_Health_Small
   m_EditorClassIdentifier: 
-  pickupName: 'Weapon: Automatic'
-  weapon: {fileID: 11400000, guid: c01672e9fb7efaf4d8708256c3cd5fbb, type: 2}
+  pickupName: Health Pack
+  health: 10

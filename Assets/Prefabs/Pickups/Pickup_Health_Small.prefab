@@ -7,9 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2628473548383647349, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3537736
+      objectReference: {fileID: 0}
+    - target: {fileID: 2628473548383647349, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2628473548383647349, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.82411605
+      objectReference: {fileID: 0}
     - target: {fileID: 4943613854117315786, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
       propertyPath: m_Name
-      value: Pickup_AutomaticBlaster
+      value: Pickup_Health_Small
       objectReference: {fileID: 0}
     - target: {fileID: 6567624618462514477, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -58,6 +70,6 @@ PrefabInstance:
     - target: {fileID: 8377941654115196428, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
       propertyPath: pickupData
       value: 
-      objectReference: {fileID: 11400000, guid: cb2c866f42c032a45bcc6e83b43366e7, type: 2}
+      objectReference: {fileID: 11400000, guid: b2d6ca990a23efb448f3529f5c39b066, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}

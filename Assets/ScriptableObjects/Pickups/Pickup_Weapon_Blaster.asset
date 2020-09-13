@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48f27ccfd1a1f7a4fa298b5437c779a0, type: 3}
   m_Name: Pickup_Weapon_Blaster
   m_EditorClassIdentifier: 
+  pickupName: 'Weapon: Blaster'
   weapon: {fileID: 11400000, guid: 25bbf4abb16ad084f93b7c7de2822efd, type: 2}

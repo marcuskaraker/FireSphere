@@ -22,4 +22,9 @@ public class ObjectUtilities : MonoBehaviour
     {
         CameraShaker.Instance.ShakeOnce(size, size, 0, 0.1f);
     }
+
+    public void IncreaseKillCounter()
+    {
+        GameManager.Instance.IncreaseKillCounter();
+    }
 }

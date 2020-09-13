@@ -1,18 +1,30 @@
 ﻿using UnityEngine;
 using MK;
 using System.Collections.Generic;
+using System.Collections;
 
 public class GameManager : MonoBehaviorSingleton<GameManager>
 {
+    public int killCounter;
+    public BoxCollider2D arenaBounds;
+
+    [Header("Cruiser Spawning")]
+    public Cruiser cruiserPrefab;
+    public MinMax cruiserMinMaxSpawnInterval = new MinMax(10f, 60f);
+
+    [Header("World Objects Spawning")]
+    public GameObject[] worldObjects;
+    public float worldObjectSpawnChance = 0.1f;
+
     public PlayerInput PlayerInput { get; private set; }
     public GameObject Player { get; private set; }
     public UIManager UIManager { get; private set; }
 
-    List<Projectile> currentProjectiles;
+    private List<Projectile> currentProjectiles;
+    private Vector2 playerPosLastFrame;
+    private SpaceBackgroundScroller uvScroller;
 
-    Vector2 playerPosLastFrame;
-
-    SpaceBackgroundScroller uvScroller;
+    public bool GameIsRunning { get; private set; }
 
     private void Awake()
     {
@@ -26,6 +38,12 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         currentProjectiles = new List<Projectile>();
 
         playerPosLastFrame = Player.transform.position;
+
+        SpawnWorldObjects();
+
+        GameIsRunning = true;
+
+        StartCoroutine(DoSpawnEnemyCruisers());
     }
 
     private void Update()
@@ -37,6 +55,41 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             Vector2 playerDeltaPos = ((Vector2)Player.transform.position - playerPosLastFrame);
             uvScroller.Scroll(playerDeltaPos);
             playerPosLastFrame = Player.transform.position;
+        }
+
+        UIManager.SetKillCounterText(killCounter.ToString());
+    }
+
+    private void OnDisable()
+    {
+        GameIsRunning = false;
+    }
+
+    private void SpawnWorldObjects()
+    {
+        for (int x = 0; x < arenaBounds.bounds.size.x; x++)
+        {
+            for (int y = 0; y < arenaBounds.bounds.size.y; y++)
+            {
+                if (Random.Range(0f, 1f) > worldObjectSpawnChance) continue;
+
+                Vector2 randomOffset = Random.insideUnitCircle;
+                Vector2 pos = (new Vector2(x, y) + randomOffset) - (Vector2)arenaBounds.bounds.extents;
+                Instantiate(worldObjects[Random.Range(0, worldObjects.Length)], pos, Quaternion.identity);
+            }
+        }
+    }
+
+    private IEnumerator DoSpawnEnemyCruisers()
+    {
+        while (GameIsRunning)
+        {
+            yield return new WaitForSeconds(Random.Range(cruiserMinMaxSpawnInterval.min, cruiserMinMaxSpawnInterval.max));
+
+            Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds);
+            Instantiate(cruiserPrefab, pos, Quaternion.identity);
+
+            UIManager.PromptIfEmpty("An enemy cruiser has arrived!", 2f);
         }
     }
 
@@ -54,42 +107,52 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
                 continue;
             }
 
-            if (projectile.speed != 0)
+            if (projectile.projectileData.speed != 0)
             {
                 // TODO: Shouldn't this need to be projectile.transform.right? Why does the global Vector2.right work here?
-                projectile.transform.Translate(Vector2.right * projectile.speed * Time.deltaTime);
+                projectile.transform.Translate(Vector2.right * projectile.projectileData.speed * Time.deltaTime);
             }
         }
     }
 
-    public Projectile[] SpawnBullets(Projectile projectilePrefab, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
+    public Projectile[] SpawnBullets(Projectile projectilePrefab, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
     {
         Projectile[] spawnedBullets = new Projectile[firePositions.Length];
         for (int i = 0; i < firePositions.Length; i++)
         {
-            spawnedBullets[i] = SpawnBullet(projectilePrefab, firePositions, i, relativeVelocity, useRelativeBulletSpeed);
+            spawnedBullets[i] = SpawnBullet(projectilePrefab, firePositions, i, relativeVelocity, useRelativeBulletSpeed, projectileData);
         }
 
         return spawnedBullets;
     }
 
-    public Projectile SpawnBullet(Projectile projectilePrefab, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
+    public Projectile SpawnBullet(Projectile projectilePrefab, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
     {
         Projectile spawnedBullet = Instantiate(projectilePrefab, firePositions[fireIndex].position, Quaternion.identity);
         spawnedBullet.transform.right = firePositions[fireIndex].right;
-        InitBullet(spawnedBullet, relativeVelocity, useRelativeBulletSpeed);
+        InitBullet(spawnedBullet, relativeVelocity, useRelativeBulletSpeed, projectileData);
 
         return spawnedBullet;
     }
 
-    protected void InitBullet(Projectile projectile, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
+    protected void InitBullet(Projectile projectile, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
     {
         if (useRelativeBulletSpeed)
         {
             relativeVelocity = Mathf.Max(relativeVelocity, 0);
-            projectile.speed += relativeVelocity;
+            projectile.projectileData.speed += relativeVelocity;
+        }
+
+        if (projectileData != null)
+        {
+            projectile.projectileData = projectileData;
         }
 
         currentProjectiles.Add(projectile);
+    }
+
+    public void IncreaseKillCounter()
+    {
+        killCounter++;
     }
 }

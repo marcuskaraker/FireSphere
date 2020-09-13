@@ -10,8 +10,9 @@ public abstract class Weapon : ScriptableObject
     public BarrelFireMode barrelFireMode;
     public FireMode fireMode;
 
+    public ProjectileData projectileData;
+
     [Space]
-    public float damage = 1f;
     public float range = 10f;
     public float fireRate = 0.1f;
     public float clipSize = 50f;

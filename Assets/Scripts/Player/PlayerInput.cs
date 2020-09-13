@@ -37,6 +37,16 @@ public class PlayerInput : MonoBehaviour
         Movement.direction = new Vector2(moveX, moveY);
         Movement.rotationTarget = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
+        if (!GameManager.Instance.arenaBounds.bounds.Contains((Vector2)controlTarget.transform.position))
+        {
+            Vector2 dirBackToCenter = (-controlTarget.transform.position).normalized;
+
+            Movement.direction = dirBackToCenter;
+            Movement.rotationTarget = Vector2.zero;
+
+            GameManager.Instance.UIManager.PromptIfEmpty("Outside of arena!");
+        }
+
         bool automaticKeyCheck = Input.GetKey(fireKey) && Shooter.CompareWeaponFireMode(FireMode.Automatic);
         bool singleKeyCheck = Input.GetKeyDown(fireKey) && Shooter.CompareWeaponFireMode(FireMode.Single);
 

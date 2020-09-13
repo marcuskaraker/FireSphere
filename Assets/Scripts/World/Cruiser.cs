@@ -16,6 +16,7 @@ public class Cruiser : MonoBehaviour
     private EnemyController[] turrets;
 
     public UnityEvent onShipExplosion;
+    public UnityEvent onShipDestroy;
 
     private const float EXPLOSION_WAIT_TIME_MIN = 0.1f;
     private const float EXPLOSION_WAIT_TIME_MAX = 0.75f;
@@ -29,11 +30,14 @@ public class Cruiser : MonoBehaviour
             target = GameManager.Instance.Player;
         }
 
-        foreach (EnemyController turret in turrets)
+        if (target)
         {
-            turret.chaseTarget = target.transform;
-        }
-
+            foreach (EnemyController turret in turrets)
+            {
+                turret.chaseTarget = target.transform;
+            }
+        }    
+        
         health = turrets.Length;
     }
 
@@ -77,6 +81,7 @@ public class Cruiser : MonoBehaviour
             }            
         }
 
+        onShipDestroy.Invoke();
         Destroy(gameObject);
     }
 }

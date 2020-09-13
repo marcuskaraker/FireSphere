@@ -13,10 +13,23 @@ public class BlasterWeapon : Weapon
         switch (barrelFireMode)
         {
             case BarrelFireMode.FireAll:
-                GameManager.Instance.SpawnBullets(projectilePrefab, shooter.firePositions, shooter.LatestRelativeVelocity, useRelativeBulletSpeed);
+                GameManager.Instance.SpawnBullets(
+                    projectilePrefab, 
+                    shooter.firePositions, 
+                    shooter.LatestRelativeVelocity,
+                    useRelativeBulletSpeed, 
+                    projectileData
+                );
                 break;
             case BarrelFireMode.TurnFire:
-                GameManager.Instance.SpawnBullet(projectilePrefab, shooter.firePositions, shooter.firePointIndex, shooter.LatestRelativeVelocity, useRelativeBulletSpeed);
+                GameManager.Instance.SpawnBullet(
+                    projectilePrefab, 
+                    shooter.firePositions, 
+                    shooter.firePointIndex, 
+                    shooter.LatestRelativeVelocity, 
+                    useRelativeBulletSpeed, 
+                    projectileData
+                );
                 shooter.firePointIndex = (shooter.firePointIndex + 1) % shooter.firePositions.Length;
                 break;
         }

@@ -1,37 +1,16 @@
 fileFormatVersion: 2
-guid: 2f45d910d5280bf4296c11684d963bc0
+guid: 1285fbae5daaaad4687fbbafbf30de37
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1571786891402097675
-    second: Effects_0
+      213: -2244543243340742949
+    second: Asteroids_0
   - first:
-      213: -3792339887870337536
-    second: Effects_1
+      213: 2619520171403366046
+    second: Asteroids_1
   - first:
-      213: 6094277050569500514
-    second: Effects_0
-  - first:
-      213: 4341920410958192780
-    second: Effects_1
-  - first:
-      213: -8248184414856976584
-    second: Effects_2
-  - first:
-      213: -5102222094355388254
-    second: Effects_2
-  - first:
-      213: -6140521989939545447
-    second: Effects_3
-  - first:
-      213: 4030479774811690518
-    second: Effects_3
-  - first:
-      213: -5810290663535272605
-    second: Effects_4
-  - first:
-      213: 3832456890588305621
-    second: Effects_5
+      213: 1335499673870057088
+    second: Asteroids_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -119,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Effects_0
+      name: Asteroids_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 112
-        width: 16
-        height: 16
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,41 +112,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 267a20a40b8339450800000000000000
-      internalID: 6094277050569500514
+      spriteID: bdefba1ffc7c9d0e0800000000000000
+      internalID: -2244543243340742949
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effects_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 112
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c806e2afb99914c30800000000000000
-      internalID: 4341920410958192780
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effects_2
+      name: Asteroids_1
       rect:
         serializedVersion: 2
         x: 32
-        y: 112
-        width: 16
-        height: 16
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -175,41 +133,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2a82cc4b9044139b0800000000000000
-      internalID: -5102222094355388254
+      spriteID: e9ec77297b76a5420800000000000000
+      internalID: 2619520171403366046
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Effects_3
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 112
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6161c0430042fe730800000000000000
-      internalID: 4030479774811690518
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effects_4
+      name: Asteroids_2
       rect:
         serializedVersion: 2
         x: 64
-        y: 112
-        width: 16
-        height: 16
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -217,29 +154,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36d163efc63bd5fa0800000000000000
-      internalID: -5810290663535272605
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Effects_5
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 112
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5d8938c9c3f9f2530800000000000000
-      internalID: 3832456890588305621
+      spriteID: 08ebcaaa0e5a88210800000000000000
+      internalID: 1335499673870057088
       vertices: []
       indices: 
       edges: []

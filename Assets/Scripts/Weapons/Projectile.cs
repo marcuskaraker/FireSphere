@@ -3,12 +3,18 @@ using UnityEngine.Events;
 using MK.Destructible;
 using MK;
 
-public class Projectile : MonoBehaviour
+[System.Serializable]
+public class ProjectileData
 {
     public float damage = 1f;
-    public float speed = 1f;
+    public float speed = 20f;
     public float lifeTime = 2f;
     public bool destroyOnHit = true;
+}
+
+public class Projectile : MonoBehaviour
+{
+    public ProjectileData projectileData;
 
     public LayerMask layerMask;
 
@@ -16,9 +22,9 @@ public class Projectile : MonoBehaviour
 
     private void Start()
     {
-        if (lifeTime >= 0)
+        if (projectileData.lifeTime >= 0)
         {
-            Destroy(gameObject, lifeTime);
+            Destroy(gameObject, projectileData.lifeTime);
         }
     }
 
@@ -29,12 +35,12 @@ public class Projectile : MonoBehaviour
             Destructible destructible = collision.gameObject.GetComponent<Destructible>();
             if (destructible)
             {
-                destructible.Hurt(damage);
+                destructible.Hurt(projectileData.damage);
             }
 
             onHit.Invoke();
 
-            if (destroyOnHit)
+            if (projectileData.destroyOnHit)
             {
                 Destroy(gameObject);
             }          

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using MK.Destructible;
 using MK.UI;
 using System.Collections;
@@ -8,18 +9,20 @@ public class UIManager : MonoBehaviour
     public PlayerInput playerController;
 
     public Canvas mainCanvas;
+    public Transform promptParent;
     public HealthBar healthBar;
+    public Text killCounterText;
     public UIPromptDisplay promptDisplayPrefab;
 
-    Destructible playerDestructible;
+    private Destructible playerDestructible;
+
+    private UIPromptDisplay currentlySpawnedPrompt;
 
     private void Awake()
     {
         Cursor.visible = false;
 
         playerDestructible = playerController.controlTarget.GetComponent<Destructible>();
-
-        StartCoroutine(TestPrompt());
     }
 
     private void Update()
@@ -30,15 +33,23 @@ public class UIManager : MonoBehaviour
         );
     }
 
-    public void Prompt(string text)
+    public UIPromptDisplay Prompt(string text, float lifetime = 1f)
     {
-        UIPromptDisplay spawnedPrompt = Instantiate(promptDisplayPrefab, Vector2.zero, Quaternion.identity, mainCanvas.transform);
-        spawnedPrompt.InitPrompt(Vector2.zero, TransitionPreset.ScaleIn, 2f, text);
+        UIPromptDisplay spawnedPrompt = Instantiate(promptDisplayPrefab, Vector2.zero, Quaternion.identity, promptParent);
+        spawnedPrompt.InitPrompt(Vector2.zero, TransitionPreset.ScaleIn, lifetime, text);
+
+        return spawnedPrompt;
     }
 
-    IEnumerator TestPrompt()
+    public void PromptIfEmpty(string text, float lifetime = 1f)
     {
-        yield return new WaitForSeconds(2f);
-        Prompt("Testing!!");
+        if (currentlySpawnedPrompt != null) return;
+
+        currentlySpawnedPrompt = Prompt(text, lifetime);
+    }
+
+    public void SetKillCounterText(string text)
+    {
+        killCounterText.text = text;
     }
 }
