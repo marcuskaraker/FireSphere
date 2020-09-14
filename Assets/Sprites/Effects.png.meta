@@ -32,6 +32,15 @@ TextureImporter:
   - first:
       213: 3832456890588305621
     second: Effects_5
+  - first:
+      213: -7794210724065038618
+    second: Effects_4
+  - first:
+      213: 6339588007696357121
+    second: Effects_5
+  - first:
+      213: -7466522973678874103
+    second: Effects_6
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -217,8 +226,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 36d163efc63bd5fa0800000000000000
-      internalID: -5810290663535272605
+      spriteID: 6ee209754a665d390800000000000000
+      internalID: -7794210724065038618
       vertices: []
       indices: 
       edges: []
@@ -238,8 +247,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d8938c9c3f9f2530800000000000000
-      internalID: 3832456890588305621
+      spriteID: 107511554bdbaf750800000000000000
+      internalID: 6339588007696357121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effects_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 902d39e2ae4916890800000000000000
+      internalID: -7466522973678874103
       vertices: []
       indices: 
       edges: []
