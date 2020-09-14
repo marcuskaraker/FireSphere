@@ -47,6 +47,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupData: {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
+  enableWaitTime: 0.5
+  isInteractable: 0
+  iconRenderer: {fileID: 2628473548383647349}
 --- !u!58 &2310723019300943363
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -217,7 +220,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: 3832456890588305621, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

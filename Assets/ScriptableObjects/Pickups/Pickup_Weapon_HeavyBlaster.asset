@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48f27ccfd1a1f7a4fa298b5437c779a0, type: 3}
-  m_Name: Pickup_Weapon_Blaster
+  m_Name: Pickup_Weapon_HeavyBlaster
   m_EditorClassIdentifier: 
-  pickupName: 'Weapon: Blaster'
+  pickupName: 'Weapon: Heavy Blaster'
+  icon: {fileID: -3792339887870337536, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
+  iconColor: {r: 1, g: 0.99215686, b: 0, a: 1}
   weapon: {fileID: 11400000, guid: 25bbf4abb16ad084f93b7c7de2822efd, type: 2}

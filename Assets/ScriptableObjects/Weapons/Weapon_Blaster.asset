@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30b5fdb81ac5b64bba914f09c342479, type: 3}
   m_Name: Weapon_Blaster
   m_EditorClassIdentifier: 
+  weaponIcon: {fileID: 1571786891402097675, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
+  weaponIconColor: {r: 1, g: 0.8117647, b: 0, a: 1}
+  weaponDropPickup: {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
   barrelFireMode: 1
   fireMode: 0
-  damage: 1
+  projectileData:
+    damage: 1
+    speed: 20
+    lifeTime: 2
+    destroyOnHit: 1
   range: 10
   fireRate: 0.1
   clipSize: -1
-  projectilePrefab: {fileID: 7014456061542720318, guid: 56d40e2fe976fa749b2b5cb637154c7b, type: 3}
+  recoil: 0.5
+  projectilePrefab: {fileID: 7475593793509080615, guid: 27e17e951a8188340b3c1ebd94c4ae59, type: 3}
   useRelativeBulletSpeed: 1

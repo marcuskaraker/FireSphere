@@ -3,6 +3,7 @@
 public class PlayerInput : MonoBehaviour
 {
     public GameObject controlTarget;
+    public Shield shieldEffect;
 
     public KeyCode fireKey = KeyCode.Mouse0;
     public KeyCode shieldKey = KeyCode.Mouse1;
@@ -10,7 +11,6 @@ public class PlayerInput : MonoBehaviour
 
     public Movement Movement { get; private set; }
     public Shooter Shooter { get; private set; }
-    public Shield Shield { get; private set; }
 
     Transform playerSprite;
 
@@ -21,7 +21,6 @@ public class PlayerInput : MonoBehaviour
         // Get movment reference
         Movement = controlTarget.GetComponent<Movement>();
         Shooter = controlTarget.GetComponent<Shooter>();
-        Shield = controlTarget.GetComponentInChildren<Shield>();
 
         playerSprite = controlTarget.transform.GetChild(0).transform;
 
@@ -66,7 +65,9 @@ public class PlayerInput : MonoBehaviour
 
         if (Input.GetKeyDown(shieldKey))
         {
-            Shield.ActivateShield();
+            shieldEffect.ActivateShield();
         }
+
+        Shooter.CurrentWeaponIndex += (int)Input.mouseScrollDelta.y;
     }
 }

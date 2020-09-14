@@ -1,0 +1,20 @@
+* Weapons
+	* Homing Missle
+	* Shotgun (Spread)
+	* Crusier Beacon
+
+* Weapon durability
+
+* AI
+	* AI Factions
+
+* UI
+	* Lobby
+	* Main Menu
+
+* Only screenshake if enemy is on screen
+	* Only give score then too?
+
+* Object pooling
+
+* 

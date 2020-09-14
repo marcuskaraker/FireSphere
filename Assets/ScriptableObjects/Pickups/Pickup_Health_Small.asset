@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Pickup_Health_Small
   m_EditorClassIdentifier: 
   pickupName: Health Pack
+  icon: {fileID: -5810290663535272605, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
+  iconColor: {r: 0.3529412, g: 1, b: 0.8235294, a: 1}
   health: 10

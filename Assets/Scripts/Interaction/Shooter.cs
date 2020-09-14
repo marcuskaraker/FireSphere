@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 public class Shooter : MonoBehaviour
 {
-    public Weapon weapon;
+    public Weapon[] loadout;
+    [NonSerialized] public float[] durability;
     public Transform[] firePositions;
     public bool recoilRigidbody = true;
 
@@ -14,15 +16,24 @@ public class Shooter : MonoBehaviour
 
     public UnityEvent onShoot;
 
-    Rigidbody2D rb2D;
+    private Rigidbody2D rb2D;
+    private int currentWeaponIndex;
 
     public float LatestRelativeVelocity { get; private set; }
+
+    public int CurrentWeaponIndex
+    {
+        get { return currentWeaponIndex; }
+        set { currentWeaponIndex = Mathf.Abs(value) % loadout.Length; }
+    }
 
     private void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
 
-        EquipWeapon(weapon);
+        durability = new float[loadout.Length];
+
+        EquipWeapon(loadout[CurrentWeaponIndex], false);
     }
 
     private void Update()
@@ -32,13 +43,25 @@ public class Shooter : MonoBehaviour
 
     public bool Shoot(float relativeVelocity = 0f)
     {
-        if (weapon == null) return false;
-        if (fireTimer < weapon.fireRate) return false;
-        if (weapon.clipSize >= 0 && currentClipSize <= 0) return false;
+        if (WeaponNullCheck()) return false;
+
+        Weapon currentWeapon = loadout[CurrentWeaponIndex];
+
+        if (fireTimer < currentWeapon.fireRate) return false;
+        if (currentWeapon.clipSize >= 0 && currentClipSize <= 0) return false;
 
         LatestRelativeVelocity = relativeVelocity;
+        currentWeapon.Fire(this);
 
-        weapon.Fire(this);
+        if (currentWeapon.durability >= 0)
+        {
+            durability[CurrentWeaponIndex] = Mathf.Max(durability[CurrentWeaponIndex] - 1, 0);
+
+            if (durability[CurrentWeaponIndex] <= 0)
+            {
+                
+            }
+        }
 
         if (recoilRigidbody)
         {
@@ -46,7 +69,6 @@ public class Shooter : MonoBehaviour
         }
 
         fireTimer = 0f;
-
         onShoot.Invoke();
 
         return true;
@@ -54,15 +76,20 @@ public class Shooter : MonoBehaviour
 
     public bool Reload()
     {
-        if (weapon == null) return false;
+        if (WeaponNullCheck()) return false;
 
-        weapon.Reload(this);
+        loadout[CurrentWeaponIndex].Reload(this);
         return true;
     }
 
-    public void EquipWeapon(Weapon weapon)
+    public void EquipWeapon(Weapon weapon, bool dropWeapon = true)
     {
-        this.weapon = weapon;
+        if (dropWeapon && loadout[CurrentWeaponIndex] != null && loadout[CurrentWeaponIndex].weaponDropPickup != null)
+        {
+            GameManager.Instance.SpawnPickup(loadout[CurrentWeaponIndex].weaponDropPickup, transform.position);
+        }
+
+        loadout[CurrentWeaponIndex] = weapon;
 
         if (weapon == null) return;
 
@@ -71,14 +98,19 @@ public class Shooter : MonoBehaviour
 
     public bool CompareWeaponFireMode(FireMode fireMode)
     {
-        if (weapon == null) return false;
-        return weapon.fireMode == fireMode;
+        if (WeaponNullCheck()) return false;
+        return loadout[CurrentWeaponIndex].fireMode == fireMode;
     }
 
     public void Recoil()
     {
-        if (rb2D == null || weapon == null) return;
+        if (rb2D == null || WeaponNullCheck()) return;
 
-        rb2D.AddForce(-transform.right * weapon.recoil, ForceMode2D.Impulse);
+        rb2D.AddForce(-transform.right * loadout[CurrentWeaponIndex].recoil, ForceMode2D.Impulse);
+    }
+
+    private bool WeaponNullCheck()
+    {
+        return (loadout == null || loadout.Length < CurrentWeaponIndex || loadout[CurrentWeaponIndex] == null);
     }
 }

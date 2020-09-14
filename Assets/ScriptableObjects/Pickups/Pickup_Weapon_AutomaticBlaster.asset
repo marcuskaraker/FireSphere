@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Pickup_Weapon_AutomaticBlaster
   m_EditorClassIdentifier: 
   pickupName: 'Weapon: Automatic'
+  icon: {fileID: 1161201145128540330, guid: f5b373933cb9cd048b8da435601c6512, type: 3}
+  iconColor: {r: 1, g: 1, b: 1, a: 1}
   weapon: {fileID: 11400000, guid: c01672e9fb7efaf4d8708256c3cd5fbb, type: 2}

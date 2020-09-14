@@ -63,6 +63,10 @@ PrefabInstance:
       propertyPath: weapon
       value: 
       objectReference: {fileID: 11400000, guid: a79b1518eb033614eab0843c050fb7cc, type: 2}
+    - target: {fileID: 1136281457149560104, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
+      propertyPath: loadout.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: a79b1518eb033614eab0843c050fb7cc, type: 2}
     - target: {fileID: 1136281457149560106, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: m_Constraints
       value: 3

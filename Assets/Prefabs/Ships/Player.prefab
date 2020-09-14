@@ -56,6 +56,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: loadout.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: weapon
       value: 
       objectReference: {fileID: 11400000, guid: 25bbf4abb16ad084f93b7c7de2822efd, type: 2}
@@ -86,6 +90,10 @@ PrefabInstance:
     - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: onShoot.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: loadout.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7476992757935768062, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: m_LocalPosition.x

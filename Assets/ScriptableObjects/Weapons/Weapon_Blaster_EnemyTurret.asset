@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30b5fdb81ac5b64bba914f09c342479, type: 3}
   m_Name: Weapon_Blaster_EnemyTurret
   m_EditorClassIdentifier: 
+  weaponIcon: {fileID: 1571786891402097675, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
+  weaponIconColor: {r: 1, g: 1, b: 1, a: 1}
   barrelFireMode: 1
   fireMode: 0
   projectileData:

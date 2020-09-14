@@ -91,9 +91,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2731795244701763269}
+  - component: {fileID: 3318915411682535362}
   - component: {fileID: 3647811796435012331}
   m_Layer: 0
-  m_Name: Shield
+  m_Name: Effect_Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -114,6 +115,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3318915411682535362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3656761985685441485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a339992956f4004bafeaa0a693a8ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  shieldDuration: 3
+  shieldCooldown: 5
 --- !u!95 &3647811796435012331
 Animator:
   serializedVersion: 3

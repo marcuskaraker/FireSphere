@@ -5,16 +5,10 @@ using System.Collections;
 
 public class GameManager : MonoBehaviorSingleton<GameManager>
 {
+    public GameData gameData;
+
     public int killCounter;
     public BoxCollider2D arenaBounds;
-
-    [Header("Cruiser Spawning")]
-    public Cruiser cruiserPrefab;
-    public MinMax cruiserMinMaxSpawnInterval = new MinMax(10f, 60f);
-
-    [Header("World Objects Spawning")]
-    public GameObject[] worldObjects;
-    public float worldObjectSpawnChance = 0.1f;
 
     public PlayerInput PlayerInput { get; private set; }
     public GameObject Player { get; private set; }
@@ -71,11 +65,11 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         {
             for (int y = 0; y < arenaBounds.bounds.size.y; y++)
             {
-                if (Random.Range(0f, 1f) > worldObjectSpawnChance) continue;
+                if (Random.Range(0f, 1f) > gameData.worldObjectSpawnChance) continue;
 
                 Vector2 randomOffset = Random.insideUnitCircle;
                 Vector2 pos = (new Vector2(x, y) + randomOffset) - (Vector2)arenaBounds.bounds.extents;
-                Instantiate(worldObjects[Random.Range(0, worldObjects.Length)], pos, Quaternion.identity);
+                Instantiate(gameData.worldObjects[Random.Range(0, gameData.worldObjects.Length)], pos, Quaternion.identity);
             }
         }
     }
@@ -84,10 +78,10 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     {
         while (GameIsRunning)
         {
-            yield return new WaitForSeconds(Random.Range(cruiserMinMaxSpawnInterval.min, cruiserMinMaxSpawnInterval.max));
+            yield return new WaitForSeconds(Random.Range(gameData.cruiserMinMaxSpawnInterval.min, gameData.cruiserMinMaxSpawnInterval.max));
 
             Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds);
-            Instantiate(cruiserPrefab, pos, Quaternion.identity);
+            Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
 
             UIManager.PromptIfEmpty("An enemy cruiser has arrived!", 2f);
         }
@@ -113,6 +107,26 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
                 projectile.transform.Translate(Vector2.right * projectile.projectileData.speed * Time.deltaTime);
             }
         }
+    }
+
+    public PickupInteractable SpawnPickup(string name, Vector2 pos)
+    {
+        Pickup pickupToSpawn = gameData.GetPickup(name);
+        return SpawnPickup(pickupToSpawn, pos);
+    }
+
+    public PickupInteractable SpawnPickup(Pickup pickup, Vector2 pos)
+    {
+        if (pickup != null)
+        {
+            PickupInteractable pickupInteractable = Instantiate(gameData.pickupPrefab, pos, Quaternion.identity);
+            pickupInteractable.pickupData = pickup;
+            pickupInteractable.SetIcon(pickup.icon, pickup.iconColor);
+
+            return pickupInteractable;
+        }
+
+        return null;
     }
 
     public Projectile[] SpawnBullets(Projectile projectilePrefab, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)

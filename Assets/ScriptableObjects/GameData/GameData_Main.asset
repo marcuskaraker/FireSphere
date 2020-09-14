@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a236971d839d08b4a92b57d4d0e3e819, type: 3}
+  m_Name: GameData_Main
+  m_EditorClassIdentifier: 
+  cruiserPrefab: {fileID: 5278800303536069839, guid: 54e9602704469e04c86d93c33fa331e7, type: 3}
+  cruiserMinMaxSpawnInterval:
+    min: 10
+    max: 60
+  worldObjects:
+  - {fileID: 1722668974130015728, guid: a131a7e785edaa6439c9734995595b9e, type: 3}
+  - {fileID: 4818201301333974529, guid: 6f778a92f00275a4391741090894caf1, type: 3}
+  - {fileID: 4818201301333974529, guid: 121c37809ac759845a45bbc6b68605ed, type: 3}
+  worldObjectSpawnChance: 0.01
+  pickupPrefab: {fileID: 8377941654115196428, guid: 38ff713779e9d2e459069d90ce99bac5, type: 3}
+  allPickups:
+  - {fileID: 11400000, guid: b2d6ca990a23efb448f3529f5c39b066, type: 2}
+  - {fileID: 11400000, guid: cb2c866f42c032a45bcc6e83b43366e7, type: 2}
+  - {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}

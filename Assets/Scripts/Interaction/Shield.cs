@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine;
 
+public enum ShieldState { Closed, Open, Closing }
+
 public class Shield : MonoBehaviour
 {
     public Destructible target;
@@ -11,22 +13,36 @@ public class Shield : MonoBehaviour
 
     private bool canUseShield = true;
     private Animator animator;
+    private Vector3 offset;
+
+    public float ShieldTimer { get; private set; }
+    public ShieldState ShieldState { get; private set; }
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
+        offset = transform.position - target.transform.position;
 
         SetShield(false);
     }
 
     public void ActivateShield()
     {
-        if (!canUseShield)
+        if (!canUseShield || target == null)
         {
             return;
         }
 
         StartCoroutine(DoShieldCooldown());
+    }
+
+    private void LateUpdate()
+    {
+        if (target != null)
+        {
+            transform.position = offset + target.transform.position;
+        }
     }
 
     public void SetShield(bool value)
@@ -37,14 +53,35 @@ public class Shield : MonoBehaviour
 
     private IEnumerator DoShieldCooldown()
     {
+        ShieldTimer = shieldDuration;
         canUseShield = false;
         SetShield(true);
 
-        yield return new WaitForSeconds(shieldDuration);
+        ShieldState = ShieldState.Open;
+
+        while (ShieldTimer > 0) 
+        { 
+            ShieldTimer -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        ShieldTimer = Mathf.Max(0, ShieldTimer);
+
+        //yield return new WaitForSeconds(shieldDuration);
 
         SetShield(false);
 
-        yield return new WaitForSeconds(shieldCooldown);
+        ShieldState = ShieldState.Closing;
+
+        while (ShieldTimer < shieldCooldown)
+        {
+            ShieldTimer += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        //yield return new WaitForSeconds(shieldCooldown);
         canUseShield = true;
+
+        ShieldState = ShieldState.Closed;
     }
 }
