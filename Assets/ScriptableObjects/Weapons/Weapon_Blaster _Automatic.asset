@@ -22,6 +22,7 @@ MonoBehaviour:
     speed: 20
     lifeTime: 2
     destroyOnHit: 1
+  durability: -1
   range: 10
   fireRate: 0.1
   clipSize: -1

@@ -16,6 +16,7 @@ public abstract class Weapon : ScriptableObject
     public ProjectileData projectileData;
 
     [Space]
+    [Tooltip("The durability of the weapon. If negative, the durability is infinite.")]
     public float durability = -1;
     public float range = 10f;
     public float fireRate = 0.1f;

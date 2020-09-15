@@ -33,7 +33,7 @@ public class Shooter : MonoBehaviour
 
         durability = new float[loadout.Length];
 
-        EquipWeapon(loadout[CurrentWeaponIndex], false);
+        EquipWeapon(loadout[CurrentWeaponIndex], 1, false);
     }
 
     private void Update()
@@ -50,19 +50,11 @@ public class Shooter : MonoBehaviour
         if (fireTimer < currentWeapon.fireRate) return false;
         if (currentWeapon.clipSize >= 0 && currentClipSize <= 0) return false;
 
+        // Fire
         LatestRelativeVelocity = relativeVelocity;
         currentWeapon.Fire(this);
 
-        if (currentWeapon.durability >= 0)
-        {
-            durability[CurrentWeaponIndex] = Mathf.Max(durability[CurrentWeaponIndex] - 1, 0);
-
-            if (durability[CurrentWeaponIndex] <= 0)
-            {
-                
-            }
-        }
-
+        // Recoil
         if (recoilRigidbody)
         {
             Recoil();
@@ -70,6 +62,17 @@ public class Shooter : MonoBehaviour
 
         fireTimer = 0f;
         onShoot.Invoke();
+
+        // Durability
+        if (currentWeapon.durability >= 0)
+        {
+            durability[CurrentWeaponIndex] = Mathf.Max(durability[CurrentWeaponIndex] - 1, 0);
+
+            if (durability[CurrentWeaponIndex] <= 0)
+            {
+                EquipWeapon(null, 0, false);
+            }
+        }
 
         return true;
     }
@@ -82,14 +85,26 @@ public class Shooter : MonoBehaviour
         return true;
     }
 
-    public void EquipWeapon(Weapon weapon, bool dropWeapon = true)
+    /// <summary>
+    /// Equips the set weapon and sets its durability. Durability is a value from 0-1.
+    /// </summary>
+    public void EquipWeapon(Weapon weapon, float durability = 1f, bool dropWeapon = true)
     {
         if (dropWeapon && loadout[CurrentWeaponIndex] != null && loadout[CurrentWeaponIndex].weaponDropPickup != null)
         {
-            GameManager.Instance.SpawnPickup(loadout[CurrentWeaponIndex].weaponDropPickup, transform.position);
+            PickupInteractable spawnedPickup = GameManager.Instance.SpawnPickup(
+                loadout[CurrentWeaponIndex].weaponDropPickup, 
+                transform.position
+            );
+
+            if (spawnedPickup.instancePickupData is InstanceWeaponPickupData instanceWeaponPickupData)
+            {
+                instanceWeaponPickupData.durability = GetDurabilityPercentageOfWeapon(CurrentWeaponIndex);
+            }
         }
 
         loadout[CurrentWeaponIndex] = weapon;
+        this.durability[CurrentWeaponIndex] = weapon != null ? Mathf.Clamp01(durability) * weapon.durability : 0;
 
         if (weapon == null) return;
 
@@ -112,5 +127,10 @@ public class Shooter : MonoBehaviour
     private bool WeaponNullCheck()
     {
         return (loadout == null || loadout.Length < CurrentWeaponIndex || loadout[CurrentWeaponIndex] == null);
+    }
+
+    public float GetDurabilityPercentageOfWeapon(int index)
+    {
+        return loadout[index] != null ? (durability[index] / loadout[index].durability) : 0;
     }
 }

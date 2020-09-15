@@ -6,6 +6,9 @@ public class ChaseAction : Action
 {
     public float avoidDistance = 2f;
     public float checkRadius = 0.5f;
+    public bool sineMovement;
+    public float sineAffectorSpeed = 1f;
+    public float sineAffectorMagnitude = 1f;
 
     private const int COLLISION_CHECK_COUNT = 360;
 
@@ -15,6 +18,13 @@ public class ChaseAction : Action
         if (enemyController && enemyController.chaseTarget != null)
         {         
             Vector3 dirToTarget = (enemyController.chaseTarget.position - enemyController.transform.position).normalized;
+
+            if (sineMovement)
+            {
+                Vector3 perpendicular = Vector3.Cross(dirToTarget, Vector3.forward).normalized;
+                dirToTarget += perpendicular * Mathf.Sin(Time.time * sineAffectorSpeed) * sineAffectorMagnitude;
+                //Debug.Log(Mathf.Sin(Time.time * sineAffectorSpeed)) * sineAffectorMagnitude;
+            }
 
             Vector3 checkDir = dirToTarget;
 

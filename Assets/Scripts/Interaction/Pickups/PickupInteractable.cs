@@ -6,24 +6,28 @@ public class PickupInteractable : MonoBehaviour
     public Pickup pickupData;
     public float enableWaitTime = 1f;
     public bool isInteractable;
+    public InstancePickupData instancePickupData;
 
     [Space]
     public SpriteRenderer iconRenderer;
 
     private void Awake()
     {
+        instancePickupData = pickupData.NewInstanceData();
+
         StartCoroutine(DoEnableAfterTime());
     }
 
-    public void Interact(GameObject target)
+    public bool Interact(GameObject target)
     {
         if (!isInteractable)    
         {
-            return;
+            return false;
         }
 
-        pickupData.Interact(target);
+        pickupData.Interact(target, instancePickupData);
         Destroy(gameObject);
+        return true;
     }
 
     private IEnumerator DoEnableAfterTime()

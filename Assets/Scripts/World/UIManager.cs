@@ -64,19 +64,19 @@ public class UIManager : MonoBehaviour
         UpdateLoadoutLayout();
     }
 
-    public UIPromptDisplay Prompt(string text, float lifetime = 1f)
+    public UIPromptDisplay Prompt(float lifetime, params object[] elements)
     {
         UIPromptDisplay spawnedPrompt = Instantiate(promptDisplayPrefab, Vector2.zero, Quaternion.identity, promptParent);
-        spawnedPrompt.InitPrompt(Vector2.zero, TransitionPreset.ScaleIn, lifetime, text);
+        spawnedPrompt.InitPrompt(Vector2.zero, TransitionPreset.ScaleIn, lifetime, elements);
 
         return spawnedPrompt;
     }
 
-    public void PromptIfEmpty(string text, float lifetime = 1f)
+    public void PromptIfEmpty(float lifetime, params object[] elements)
     {
         if (currentlySpawnedPrompt != null) return;
 
-        currentlySpawnedPrompt = Prompt(text, lifetime);
+        currentlySpawnedPrompt = Prompt(lifetime, elements);
     }
 
     public void SetKillCounterText(string text)
@@ -116,6 +116,19 @@ public class UIManager : MonoBehaviour
                 weapon != null ? weapon.weaponIcon : null, 
                 weapon != null ? weapon.weaponIconColor : Color.white
             );
+
+            // Durability
+            if (playerController.Shooter.durability[i] >= 0)
+            {
+                float durabilityPercentage = playerController.Shooter.GetDurabilityPercentageOfWeapon(i);
+                loadOutSlots[i].durabilityBar.SetValue(durabilityPercentage);
+                loadOutSlots[i].durabilityBar.Text.text = "";
+            }
+            else
+            {
+                loadOutSlots[i].durabilityBar.SetValue(1);
+                loadOutSlots[i].durabilityBar.Text.text = "Infinite";
+            }          
         }
     }
 

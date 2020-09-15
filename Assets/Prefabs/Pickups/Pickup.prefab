@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupData: {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
-  enableWaitTime: 0.5
+  enableWaitTime: 0.1
   isInteractable: 0
   iconRenderer: {fileID: 2628473548383647349}
 --- !u!58 &2310723019300943363

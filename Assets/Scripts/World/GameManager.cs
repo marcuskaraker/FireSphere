@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds);
             Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
 
-            UIManager.PromptIfEmpty("An enemy cruiser has arrived!", 2f);
+            UIManager.PromptIfEmpty(2f, "An enemy cruiser has arrived!");
         }
     }
 

@@ -15,6 +15,7 @@ public class Cruiser : MonoBehaviour
     private int health;
     private EnemyController[] turrets;
 
+    public UnityEvent onShipSpawn;
     public UnityEvent onShipExplosion;
     public UnityEvent onShipDestroy;
 
@@ -39,6 +40,8 @@ public class Cruiser : MonoBehaviour
         }    
         
         health = turrets.Length;
+
+        onShipSpawn.Invoke();
     }
 
     public void DecreaseHealth()

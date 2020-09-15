@@ -9,9 +9,12 @@ public class PickupInteractor : MonoBehaviour
         if (collision.gameObject.CompareTag(PICKUP_TAG))
         {
             PickupInteractable pickup = collision.GetComponent<PickupInteractable>();
-            pickup.Interact(gameObject);
+            bool didPickup = pickup.Interact(gameObject);
 
-            GameManager.Instance.UIManager.PromptIfEmpty(pickup.pickupData.pickupName);
+            if (didPickup)
+            {
+                GameManager.Instance.UIManager.PromptIfEmpty(1, pickup.iconRenderer.sprite, pickup.pickupData.pickupName);
+            }           
         }
     }
 }

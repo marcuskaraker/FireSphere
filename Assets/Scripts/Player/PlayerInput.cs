@@ -47,7 +47,7 @@ public class PlayerInput : MonoBehaviour
             Movement.direction = dirBackToCenter;
             Movement.rotationTarget = Vector2.zero;
 
-            GameManager.Instance.UIManager.PromptIfEmpty("Outside of arena!", 2.5f);
+            GameManager.Instance.UIManager.PromptIfEmpty(2.5f, "Outside of arena!");
         }
 
         bool automaticKeyCheck = Input.GetKey(fireKey) && Shooter.CompareWeaponFireMode(FireMode.Automatic);

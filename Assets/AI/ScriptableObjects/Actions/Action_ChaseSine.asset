@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77432330797d5cf4faac2f06d081fad4, type: 3}
-  m_Name: HostileFireState
+  m_Script: {fileID: 11500000, guid: f7968d5adeebc15419f679b6edce75de, type: 3}
+  m_Name: Action_ChaseSine
   m_EditorClassIdentifier: 
-  actions:
-  - {fileID: 11400000, guid: f7176ed7d7d6d524090d6d759fe2c8ce, type: 2}
-  - {fileID: 11400000, guid: 2d5a19c3bdd77c443908a96007551fb5, type: 2}
-  transitions: []
+  avoidDistance: 5
+  checkRadius: 0.5
+  sineMovement: 1
+  sineAffectorSpeed: 5

@@ -3,6 +3,8 @@
 	* Shotgun (Spread)
 	* Crusier Beacon
 
+* Object pooling
+
 * Weapon durability
 
 * AI
@@ -15,6 +17,9 @@
 * Only screenshake if enemy is on screen
 	* Only give score then too?
 
-* Object pooling
+## BUGS:
 
-* 
+	* Fix durability in pickups.
+	* Cruisers spawn inside asteroids
+		- Destroy asteroids on crusier spawn?
+
