@@ -21,7 +21,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1259412537968805672, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: velocitySquaredThreshold
-      value: 40
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1259412537968805672, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: instaDeathOnOtherDestructible
@@ -95,6 +95,10 @@ PrefabInstance:
       propertyPath: loadout.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: loadout.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c01672e9fb7efaf4d8708256c3cd5fbb, type: 2}
     - target: {fileID: 7476992757935768062, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -6,7 +6,7 @@ public enum ShieldState { Closed, Open, Closing }
 
 public class Shield : MonoBehaviour
 {
-    public Destructible target;
+    [SerializeField] Destructible target;
 
     public float shieldDuration = 3f;
     public float shieldCooldown = 5f;
@@ -17,14 +17,22 @@ public class Shield : MonoBehaviour
 
     public float ShieldTimer { get; private set; }
     public ShieldState ShieldState { get; private set; }
+    public Destructible Target
+    {
+        get { return target; }
+        set
+        {
+            target = value;
+            if (target == null) return;
+            offset = transform.position - target.transform.position;
+        }
+    }
 
     private void Awake()
     {
+        Target = target;
         animator = GetComponent<Animator>();
-
-        offset = transform.position - target.transform.position;
-
-        SetShield(false);
+        SetShield(false, false);
     }
 
     public void ActivateShield()
@@ -45,10 +53,14 @@ public class Shield : MonoBehaviour
         }
     }
 
-    public void SetShield(bool value)
+    public void SetShield(bool value, bool affectTarget = true)
     {
         animator.SetBool("Activated", value);
-        target.canHurt = !value;
+
+        if (affectTarget)
+        {
+            target.canHurt = !value;
+        }
     }
 
     private IEnumerator DoShieldCooldown()

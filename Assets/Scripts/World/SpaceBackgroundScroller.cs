@@ -8,14 +8,23 @@ public class SpaceBackgroundScroller : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Vector3 offset;
 
-    private void Awake()
-    {
-        meshRenderer = GetComponent<MeshRenderer>();
+    private Vector3 startPos;
 
-        if (followTarget)
+    public Transform Target
+    {
+        get { return followTarget; }
+        set
         {
+            followTarget = value;
+            if (followTarget == null) return;
             offset = transform.position - followTarget.transform.position;
         }
+    }
+
+    private void Awake()
+    {
+        startPos = transform.position;
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     public void Scroll(Vector2 direction)
@@ -38,5 +47,10 @@ public class SpaceBackgroundScroller : MonoBehaviour
         {
             transform.position = followTarget.transform.position + offset;
         }
+    }
+
+    public void ResetPos()
+    {
+        transform.position = startPos;
     }
 }

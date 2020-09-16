@@ -65,7 +65,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 572fb8a622baa0248bf18006a19f6633, type: 2}
     - target: {fileID: 1136281457149560107, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: speed
-      value: 20
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1136281457149560107, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
+      propertyPath: rotationSpeed
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 1136281459048943088, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: m_Sprite
@@ -73,11 +77,11 @@ PrefabInstance:
       objectReference: {fileID: 4958473694988434409, guid: 3b6d8260de2834045b426e5401cb977a, type: 3}
     - target: {fileID: 2899162164413662226, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: health
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2899162164413662226, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: maxHealth
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5180779623430474254, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: currentState

@@ -15,5 +15,5 @@ MonoBehaviour:
   avoidDistance: 5
   checkRadius: 0.5
   sineMovement: 1
-  sineAffectorSpeed: 2
-  sineAffectorMagnitude: 1
+  sineAffectorSpeed: 3
+  sineAffectorMagnitude: 0.5

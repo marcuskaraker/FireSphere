@@ -5,21 +5,19 @@
 
 * Object pooling
 
-* Weapon durability
-
 * AI
 	* AI Factions
+	* Shader to replace color on ships (greyscale)
 
-* UI
-	* Lobby
-	* Main Menu
+* Add "FireSphere" Cruiser
+	- Boss
+	- Should shoot many projectiles in patterns (schmup style)
 
 * Only screenshake if enemy is on screen
 	* Only give score then too?
 
 ## BUGS:
-
-	* Fix durability in pickups.
 	* Cruisers spawn inside asteroids
 		- Destroy asteroids on crusier spawn?
-
+	* Crosshair should be on UI Canvas
+	* Clear world should clean up all objects (including pickups)

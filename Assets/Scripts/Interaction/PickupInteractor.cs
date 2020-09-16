@@ -13,7 +13,7 @@ public class PickupInteractor : MonoBehaviour
 
             if (didPickup)
             {
-                GameManager.Instance.UIManager.PromptIfEmpty(1, pickup.iconRenderer.sprite, pickup.pickupData.pickupName);
+                GameManager.Instance.UIManager.PromptIfEmpty(1, MK.UI.TransitionPreset.ScaleIn, pickup.iconRenderer.sprite, pickup.pickupData.pickupName);
             }           
         }
     }

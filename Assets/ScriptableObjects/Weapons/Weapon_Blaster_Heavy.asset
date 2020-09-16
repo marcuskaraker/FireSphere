@@ -18,7 +18,7 @@ MonoBehaviour:
   barrelFireMode: 1
   fireMode: 0
   projectileData:
-    damage: 1
+    damage: 3
     speed: 20
     lifeTime: 2
     destroyOnHit: 1

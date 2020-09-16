@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameData", menuName = "Game Data")]
 public class GameData : ScriptableObject
 {
+    [Header("Player")]
+    public GameObject playerPrefab;
+    public Shield playerShieldPrefab;
+
     [Header("Cruiser Spawning")]
     public Cruiser cruiserPrefab;
     public MinMax cruiserMinMaxSpawnInterval = new MinMax(10f, 60f);

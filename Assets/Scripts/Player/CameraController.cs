@@ -2,21 +2,29 @@
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject target;
+    [SerializeField] GameObject target;
     public GameObject cursor;
 
     private Vector3 offset;
+    private Vector3 startPos;
 
-    private Camera mainCamera;
+    public Camera MainCamera { get; private set; }
+    public GameObject Target
+    {
+        get { return target; }
+        set
+        {
+            target = value;
+            if (target == null) return;
+            offset = transform.position - target.transform.position;
+        }
+    }
 
     private void Awake()
     {
-        if (target)
-        {
-            offset = transform.position - target.transform.position;
-        }
-
-        mainCamera = GetComponentInChildren<Camera>();
+        startPos = transform.position;
+        Target = target;
+        MainCamera = GetComponentInChildren<Camera>();
     }
 
     private void LateUpdate()
@@ -28,9 +36,14 @@ public class CameraController : MonoBehaviour
 
         if (cursor)
         {
-            Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f;
             cursor.transform.position = mousePos;
         }        
+    }
+
+    public void ResetPos()
+    {
+        transform.position = startPos;
     }
 }

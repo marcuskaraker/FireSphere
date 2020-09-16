@@ -10,7 +10,8 @@ public class ChaseAction : Action
     public float sineAffectorSpeed = 1f;
     public float sineAffectorMagnitude = 1f;
 
-    private const int COLLISION_CHECK_COUNT = 360;
+    private const int COLLISION_CHECK_COUNT = 180;
+    private const int TURNING_ANGLE = 2;
 
     public override void Act(StateController controller)
     {     
@@ -33,7 +34,7 @@ public class ChaseAction : Action
                 RaycastHit2D hit = Physics2D.CircleCast(enemyController.transform.position, checkRadius, checkDir, avoidDistance, enemyController.obastacleMask);
                 if (hit.collider != null)
                 {
-                    checkDir = Quaternion.AngleAxis(enemyController.GeneratedTurningDir, Vector3.forward) * checkDir;
+                    checkDir = Quaternion.AngleAxis(enemyController.GeneratedTurningDir * TURNING_ANGLE, Vector3.forward) * checkDir;
                 }
                 else
                 {
