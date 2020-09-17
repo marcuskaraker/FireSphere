@@ -58,6 +58,17 @@ namespace MK
                 Random.Range(bounds.min.z, bounds.max.z)
             );
         }
+
+        public static int NegativeModulo(int value, int mod)
+        {
+            int result = value % mod;
+            if (result < 0)
+            {
+                result += mod;
+            }
+
+            return result;
+        }
     }
 
     [System.Serializable]

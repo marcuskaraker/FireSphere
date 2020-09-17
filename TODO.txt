@@ -1,7 +1,12 @@
 * Weapons
+	* Three weapon slots. First should be constant.
 	* Homing Missle
 	* Shotgun (Spread)
 	* Crusier Beacon
+
+* Padding to cruiser spawning
+
+* Add sound
 
 * Object pooling
 

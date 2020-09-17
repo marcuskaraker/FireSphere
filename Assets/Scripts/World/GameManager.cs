@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public UIManager UIManager { get; private set; }
 
     private List<Projectile> currentProjectiles;
+    private List<Cruiser> cruisers;
     private Vector2 playerPosLastFrame;
     private SpaceBackgroundScroller uvScroller;
 
@@ -26,11 +27,13 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
     public CameraController CameraController { get; private set; }
     public GameState GameState { get; private set; }
+    public Cruiser ClosestCruiser { get; private set; }
 
     public int[] HighScores { get; private set; }
     public string[] HighScoreNames { get; private set; }
 
     private const int HIGHSCORE_LIST_COUNT = 10;
+    private const string HIGHSCORE_SERIALIZED_NAME = "Highscore";
 
     private void Awake()
     {
@@ -44,12 +47,15 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
         currentProjectiles = new List<Projectile>();
         worldObjects = new List<GameObject>();
+        cruisers = new List<Cruiser>();
 
         HighScores = new int[HIGHSCORE_LIST_COUNT];
         HighScoreNames = new string[HIGHSCORE_LIST_COUNT];
 
+        GetHighScores();
+
         GameState = GameState.MainMenu;
-        UIManager.SetMenuActive(GameState);
+        UIManager.SetMenuActive(GameState);      
     }
 
     private void Update()
@@ -61,6 +67,12 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             Vector2 playerDeltaPos = ((Vector2)Player.transform.position - playerPosLastFrame);
             uvScroller.Scroll(playerDeltaPos);
             playerPosLastFrame = Player.transform.position;
+
+            if (Time.frameCount % 10 == 0) // Run every tenth frame
+            {
+                ClosestCruiser = GetClosestCruiser(Player.transform.position);
+                UIManager.objectiveArrow.target = ClosestCruiser != null ? ClosestCruiser.transform : null;
+            }
         }
 
         UIManager.SetKillCounterText(killCounter.ToString());
@@ -68,6 +80,11 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         if (GameState != GameState.IsRunning)
         {
             uvScroller.Scroll(Vector2.up * Time.deltaTime);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ClearHighscores();
         }
     }
 
@@ -98,14 +115,20 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         while (GameState == GameState.IsRunning)
         {
             yield return new WaitForSeconds(Random.Range(gameData.cruiserMinMaxSpawnInterval.min, gameData.cruiserMinMaxSpawnInterval.max));
-            SpawnCruiserAtRandomPos();
+            if (GameState == GameState.IsRunning)
+            {
+                SpawnCruiserAtRandomPos();
+            }          
         }
     }
 
     private void SpawnCruiserAtRandomPos()
     {
+        cruisers.RemoveAll(x => x == null);
+
         Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds);
-        Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
+        Cruiser cruiser = Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
+        cruisers.Add(cruiser);
 
         UIManager.PromptIfEmpty(2f, MK.UI.TransitionPreset.ScaleIn, "An enemy cruiser has arrived!");
     }
@@ -295,18 +318,13 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     {
         if (GameState != GameState.MainMenu) return;
 
-        int[] highscores = GetHighScores();
-        for (int i = 0; i < highscores.Length; i++)
-        {
-            Debug.Log(i + ": " + highscores[i]);
-        }
-
         GameState = GameState.HighScore;
         UIManager.SetMenuActive(GameState);
     }
 
     private void ClearGameWorld()
     {
+        // Destroy world objects
         foreach (GameObject worldObject in worldObjects)
         {
             Destroy(worldObject);
@@ -314,9 +332,22 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
         worldObjects.Clear();
 
+        // Destroy Cruisers
+        foreach (Cruiser cruiser in FindObjectsOfType<Cruiser>())
+        {
+            Destroy(cruiser.gameObject);
+        }
+
+        // Destroy Enemy Ships
         foreach (EnemyController enemy in FindObjectsOfType<EnemyController>())
         {
             Destroy(enemy.gameObject);
+        }
+
+        // Destroy Pickups
+        foreach (PickupInteractable pickup in FindObjectsOfType<PickupInteractable>())
+        {
+            Destroy(pickup.gameObject);
         }
 
         if (Player != null)
@@ -329,45 +360,69 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         CameraController.ResetPos();
     }
 
-    public int[] GetHighScores()
-    {
-        int[] highscores = new int[HIGHSCORE_LIST_COUNT];
-        for (int i = 0; i < highscores.Length; i++)
+    public void GetHighScores()
+    {     
+        HighScores = new int[HIGHSCORE_LIST_COUNT];
+        for (int i = 0; i < HighScores.Length; i++)
         {
-            highscores[i] = PlayerPrefs.GetInt(i.ToString(), 0);
-            HighScoreNames[i] = PlayerPrefs.GetString(i.ToString(), "XXX");
+            Debug.Log("HAS KEEEYYS? " + PlayerPrefs.HasKey(HIGHSCORE_SERIALIZED_NAME + i.ToString()));
+            HighScores[i] = PlayerPrefs.GetInt(HIGHSCORE_SERIALIZED_NAME + i.ToString(), 0);
+            HighScoreNames[i] = PlayerPrefs.GetString(HIGHSCORE_SERIALIZED_NAME + i.ToString(), "XXX");
         }
-
-        HighScores = highscores;
-        return highscores;
     }
 
-    public void SetHighScores(int[] highscores)
+    public void ClearHighscores()
     {
-        for (int i = 0; i < highscores.Length; i++)
+        for (int i = 0; i < HighScores.Length; i++)
         {
-            PlayerPrefs.SetInt(i.ToString(), highscores[i]);
-            PlayerPrefs.SetString(i.ToString(), HighScoreNames[i]);
+            PlayerPrefs.DeleteKey(HIGHSCORE_SERIALIZED_NAME + i.ToString());
+        }
+    }
+
+    public void SetHighScores()
+    {
+        for (int i = 0; i < HighScores.Length; i++)
+        {
+            PlayerPrefs.SetInt(HIGHSCORE_SERIALIZED_NAME + i.ToString(), HighScores[i]);
+            PlayerPrefs.SetString(HIGHSCORE_SERIALIZED_NAME + i.ToString(), HighScoreNames[i]);
         }
 
-        HighScores = highscores;
+        PlayerPrefs.Save();
     }
 
     public int SaveNewScore(int score)
     {
-        int[] highscores = GetHighScores();
-
-        for (int i = 0; i < highscores.Length; i++)
+        for (int i = 0; i < HighScores.Length; i++)
         {
-            if (score > highscores[i])
+            if (score > HighScores[i])
             {
-                highscores[i] = score;
+                System.Array.Copy(HighScores, i, HighScores, i + 1, HighScores.Length - 1 - i);
+                HighScores[i] = score;
                 HighScoreNames[i] = playerName;
-                SetHighScores(highscores);
+                SetHighScores();
                 return i;
             }
         }
        
         return -1;
+    }
+
+    public Cruiser GetClosestCruiser(Vector2 pos)
+    {
+        Cruiser closestCruiser = null;
+        float closestDistance = float.MaxValue;
+        for (int i = 0; i < cruisers.Count; i++)
+        {
+            if (cruisers[i] == null) continue;
+
+            float distance = Vector2.Distance(pos, (Vector2)cruisers[i].transform.position);
+            if (distance < closestDistance)
+            {
+                closestCruiser = cruisers[i];
+                closestDistance = distance;
+            }
+        }
+
+        return closestCruiser;
     }
 }

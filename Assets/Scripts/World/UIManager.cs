@@ -9,9 +9,12 @@ public class UIManager : MonoBehaviour
 {
     public PlayerInput playerController;
 
+    [Header("General")]
+    public RectTransform cursor;
     public Canvas mainCanvas;
     public Transform promptParent;
     public Text killCounterText;
+    public ObjectiveArrow objectiveArrow;
     public UIPromptDisplay promptDisplayPrefab;
 
     [Header("Loadout")]
@@ -37,8 +40,11 @@ public class UIManager : MonoBehaviour
 
     [Space]
     public Text highscoreTextPrefab;
-
     private List<Text> highscoreTextList;
+
+    private RectTransform mainCanvasRect;
+
+    public Camera MainCamera { get; private set; }
 
     private const float MAIN_MENU_BUTTON_ENABLE_TIME_INTERVAL = 0.1f;
 
@@ -47,6 +53,9 @@ public class UIManager : MonoBehaviour
         Cursor.visible = false;
         loadOutSlots = new List<SelectionSlot>();
         highscoreTextList = new List<Text>();
+        MainCamera = Camera.main;
+
+        mainCanvasRect = mainCanvas.GetComponent<RectTransform>();
     }
 
     private void Start()
@@ -56,6 +65,19 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if (cursor)
+        {
+            Vector2 cursorPivotPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                mainCanvasRect, 
+                Input.mousePosition, 
+                null, 
+                out cursorPivotPoint
+            );
+
+            cursor.anchoredPosition = cursorPivotPoint;
+        }
+
         if (playerDestructible == null)
         {
             return;
@@ -207,7 +229,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHighScoreList()
     {
-        for (int i = 0; i > highscoreTextList.Count; i++)
+        for (int i = 0; i < highscoreTextList.Count; i++)
         {
             highscoreTextList[i].text = GetHighscoreText(
                 i,

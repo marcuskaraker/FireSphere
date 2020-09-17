@@ -57,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: loadout.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7476992757935768051, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: weapon

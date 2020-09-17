@@ -3,7 +3,6 @@
 public class CameraController : MonoBehaviour
 {
     [SerializeField] GameObject target;
-    public GameObject cursor;
 
     private Vector3 offset;
     private Vector3 startPos;
@@ -32,14 +31,7 @@ public class CameraController : MonoBehaviour
         if (target)
         {
             transform.position = target.transform.position + offset;
-        }
-
-        if (cursor)
-        {
-            Vector3 mousePos = MainCamera.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0f;
-            cursor.transform.position = mousePos;
-        }        
+        }     
     }
 
     public void ResetPos()

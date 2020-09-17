@@ -41,6 +41,12 @@ TextureImporter:
   - first:
       213: -7466522973678874103
     second: Effects_6
+  - first:
+      213: 5899037026165408432
+    second: Effects_6
+  - first:
+      213: 6815229166277592208
+    second: Effects_7
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -268,8 +274,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 902d39e2ae4916890800000000000000
-      internalID: -7466522973678874103
+      spriteID: 0b2477dbbe69dd150800000000000000
+      internalID: 5899037026165408432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Effects_7
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0948bde61de849e50800000000000000
+      internalID: 6815229166277592208
       vertices: []
       indices: 
       edges: []

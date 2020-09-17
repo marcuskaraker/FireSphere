@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using MK;
 
 public class Shooter : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Shooter : MonoBehaviour
     public int CurrentWeaponIndex
     {
         get { return currentWeaponIndex; }
-        set { currentWeaponIndex = Mathf.Abs(value) % loadout.Length; }
+        set { currentWeaponIndex = MKUtility.NegativeModulo(value, loadout.Length); }
     }
 
     private void Awake()
