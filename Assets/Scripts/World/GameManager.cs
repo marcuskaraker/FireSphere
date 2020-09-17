@@ -33,7 +33,8 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public string[] HighScoreNames { get; private set; }
 
     private const int HIGHSCORE_LIST_COUNT = 10;
-    private const string HIGHSCORE_SERIALIZED_NAME = "Highscore";
+    private const string HIGHSCORE_SERIALIZED_NUMBERKEY = "Highscore";
+    private const string HIGHSCORE_SERIALIZED_NAMEKEY = "HighscoreName";
 
     private void Awake()
     {
@@ -82,9 +83,17 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             uvScroller.Scroll(Vector2.up * Time.deltaTime);
         }
 
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
         {
             ClearHighscores();
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
+        {
+            if (Player != null)
+            {
+                Player.GetComponent<Destructible>().Hurt(999);
+            }          
         }
     }
 
@@ -365,9 +374,9 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         HighScores = new int[HIGHSCORE_LIST_COUNT];
         for (int i = 0; i < HighScores.Length; i++)
         {
-            Debug.Log("HAS KEEEYYS? " + PlayerPrefs.HasKey(HIGHSCORE_SERIALIZED_NAME + i.ToString()));
-            HighScores[i] = PlayerPrefs.GetInt(HIGHSCORE_SERIALIZED_NAME + i.ToString(), 0);
-            HighScoreNames[i] = PlayerPrefs.GetString(HIGHSCORE_SERIALIZED_NAME + i.ToString(), "XXX");
+            Debug.Log("HAS KEEEYYS? " + PlayerPrefs.HasKey(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString()));
+            HighScores[i] = PlayerPrefs.GetInt(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString(), 0);
+            HighScoreNames[i] = PlayerPrefs.GetString(HIGHSCORE_SERIALIZED_NAMEKEY + i.ToString(), "XXX");
         }
     }
 
@@ -375,7 +384,8 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     {
         for (int i = 0; i < HighScores.Length; i++)
         {
-            PlayerPrefs.DeleteKey(HIGHSCORE_SERIALIZED_NAME + i.ToString());
+            PlayerPrefs.DeleteKey(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString());
+            PlayerPrefs.DeleteKey(HIGHSCORE_SERIALIZED_NAMEKEY + i.ToString());
         }
     }
 
@@ -383,8 +393,8 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     {
         for (int i = 0; i < HighScores.Length; i++)
         {
-            PlayerPrefs.SetInt(HIGHSCORE_SERIALIZED_NAME + i.ToString(), HighScores[i]);
-            PlayerPrefs.SetString(HIGHSCORE_SERIALIZED_NAME + i.ToString(), HighScoreNames[i]);
+            PlayerPrefs.SetInt(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString(), HighScores[i]);
+            PlayerPrefs.SetString(HIGHSCORE_SERIALIZED_NAMEKEY + i.ToString(), HighScoreNames[i]);
         }
 
         PlayerPrefs.Save();
@@ -397,6 +407,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             if (score > HighScores[i])
             {
                 System.Array.Copy(HighScores, i, HighScores, i + 1, HighScores.Length - 1 - i);
+                System.Array.Copy(HighScoreNames, i, HighScoreNames, i + 1, HighScoreNames.Length - 1 - i);
                 HighScores[i] = score;
                 HighScoreNames[i] = playerName;
                 SetHighScores();
@@ -424,5 +435,10 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         }
 
         return closestCruiser;
+    }
+
+    public void UpdatePlayerName()
+    {
+        playerName = UIManager.nameInput.text;
     }
 }

@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
     public GameObject highscoreMenuParent;
 
     [Space]
+    public InputField nameInput;
     public LayoutGroup mainMenuButtunLayout;
     public LayoutGroup highScoreLayout;
 
