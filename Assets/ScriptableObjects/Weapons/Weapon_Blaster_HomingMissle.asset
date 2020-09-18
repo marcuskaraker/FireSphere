@@ -19,15 +19,15 @@ MonoBehaviour:
   fireMode: 0
   projectileData:
     damage: 5
-    speed: 12
-    rotationSpeed: 7
+    speed: 18
+    rotationSpeed: 10
     lifeTime: 10
     destroyOnHit: 1
   durability: 10
   range: 10
-  fireRate: 1
+  fireRate: 0.25
   clipSize: -1
-  recoil: 20
+  recoil: 10
   projectilePrefab: {fileID: 7475593793509080615, guid: 27e17e951a8188340b3c1ebd94c4ae59, type: 3}
   useRelativeBulletSpeed: 1
   targetClosestEnemy: 1
