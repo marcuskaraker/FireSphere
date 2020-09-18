@@ -4,6 +4,7 @@ using MK.Destructible;
 using MK.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class UIManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     [Header("Bars")]
     public HealthBar healthBar;
     public HealthBar shieldBar;
+    public HealthBar fuelBar;
 
     private Destructible playerDestructible;
     private UIPromptDisplay currentlySpawnedPrompt;
@@ -90,6 +92,9 @@ public class UIManager : MonoBehaviour
         // Shield
         UpdatePlayerShieldBar();
 
+        // Fuel
+        UpdatePlayerFuelBar();
+
         // Loadout
         UpdateLoadoutLayout();
     }
@@ -139,6 +144,14 @@ public class UIManager : MonoBehaviour
         shieldBar.SetValue(
              shieldDisplayValue,
              "Shield: " + Mathf.RoundToInt(shieldDisplayValue * 100f) + "%"
+        );
+    }
+
+    public void UpdatePlayerFuelBar()
+    {
+        fuelBar.SetValue(
+                playerController.sprintFuel,
+                "Thrusters: " + Mathf.RoundToInt(playerController.sprintFuel * 100f) + "%"
         );
     }
 

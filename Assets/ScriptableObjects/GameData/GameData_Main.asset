@@ -18,6 +18,7 @@ MonoBehaviour:
   cruiserMinMaxSpawnInterval:
     min: 10
     max: 60
+  spawningPadding: {x: 7, y: 7, z: 7}
   worldObjects:
   - {fileID: 1722668974130015728, guid: a131a7e785edaa6439c9734995595b9e, type: 3}
   - {fileID: 4818201301333974529, guid: 6f778a92f00275a4391741090894caf1, type: 3}
@@ -28,3 +29,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b2d6ca990a23efb448f3529f5c39b066, type: 2}
   - {fileID: 11400000, guid: cb2c866f42c032a45bcc6e83b43366e7, type: 2}
   - {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
+  playerClearRadius: 3
+  cruiserClearRadius: 5

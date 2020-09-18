@@ -12,6 +12,7 @@ public class GameData : ScriptableObject
     [Header("Cruiser Spawning")]
     public Cruiser cruiserPrefab;
     public MinMax cruiserMinMaxSpawnInterval = new MinMax(10f, 60f);
+    public Vector3 spawningPadding = new Vector3(10, 10, 10);
 
     [Header("World Objects Spawning")]
     public GameObject[] worldObjects;
@@ -20,6 +21,10 @@ public class GameData : ScriptableObject
     [Header("Pickups")]
     public PickupInteractable pickupPrefab;
     public Pickup[] allPickups;
+
+    [Header("WorldObject Clear Radius")]
+    public float playerClearRadius = 3f;
+    public float cruiserClearRadius = 6f;
 
     Dictionary<string, Pickup> nameToPickupMap = new Dictionary<string, Pickup>();
 

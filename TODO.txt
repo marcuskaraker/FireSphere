@@ -1,18 +1,18 @@
-* Weapons
-	* Three weapon slots. First should be constant.
-	* Homing Missle
-	* Shotgun (Spread)
-	* Crusier Beacon
-
-* Padding to cruiser spawning
+* Object pooling
 
 * Add sound
 
-* Object pooling
+* Add other input
+	- Controller
+	- Keyboard
 
 * AI
 	* AI Factions
 	* Shader to replace color on ships (greyscale)
+
+* Weapons
+	* Shotgun (Spread)
+	* Crusier Beacon
 
 * Add "FireSphere" Cruiser
 	- Boss
@@ -21,8 +21,15 @@
 * Only screenshake if enemy is on screen
 	* Only give score then too?
 
+* Add enemy encyclepedia
+
 ## BUGS:
 	* Cruisers spawn inside asteroids
 		- Destroy asteroids on crusier spawn?
 	* Crosshair should be on UI Canvas
 	* Clear world should clean up all objects (including pickups)
+
+
+
+                // TODO: Shouldn't this need to be projectile.transform.right? Why does the global Vector2.right work here?
+                projectile.transform.Translate(Vector2.right * projectile.projectileData.speed * Time.deltaTime);

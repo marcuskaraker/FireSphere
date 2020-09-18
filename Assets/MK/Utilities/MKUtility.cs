@@ -8,22 +8,16 @@ namespace MK
     {
         public static float CalcDir2D(Vector3 a, Vector3 b)
         {
-            // Get Angle in Radians
-            float AngleRad = Mathf.Atan2(b.y - a.y, b.x - a.x);
-            // Get Angle in Degrees
-            float AngleDeg = (180 / Mathf.PI) * AngleRad;
-            // Rotate Object
-            return AngleDeg;
+            float angleRadians = Mathf.Atan2(b.y - a.y, b.x - a.x);
+            float angleDegrees = (180 / Mathf.PI) * angleRadians;
+            return angleDegrees;
         }
 
         public static float CalcDir2D(Vector3 dir)
         {
-            // Get Angle in Radians
-            float AngleRad = Mathf.Atan2(dir.y, dir.x);
-            // Get Angle in Degrees
-            float AngleDeg = (180 / Mathf.PI) * AngleRad;
-            // Rotate Object
-            return AngleDeg;
+            float angleRadians = Mathf.Atan2(dir.y, dir.x);
+            float angleDegrees = (180 / Mathf.PI) * angleRadians;
+            return angleDegrees;
         }
 
         public static bool CheckIfLayerIsWithinMask(int layer, LayerMask mask)
@@ -52,13 +46,21 @@ namespace MK
 
         public static Vector3 GetRandomPositionInBounds(Bounds bounds)
         {
+            return GetRandomPositionInBounds(bounds, Vector3.zero);
+        }
+
+        public static Vector3 GetRandomPositionInBounds(Bounds bounds, Vector3 padding)
+        {
             return new Vector3(
-                Random.Range(bounds.min.x, bounds.max.x),
-                Random.Range(bounds.min.y, bounds.max.y),
-                Random.Range(bounds.min.z, bounds.max.z)
+                Random.Range(bounds.min.x + padding.x, bounds.max.x - padding.x),
+                Random.Range(bounds.min.y + padding.y, bounds.max.y - padding.y),
+                Random.Range(bounds.min.z + padding.z, bounds.max.z - padding.z)
             );
         }
 
+        /// <summary>
+        /// Modulo that loops around on negative input.
+        /// </summary>
         public static int NegativeModulo(int value, int mod)
         {
             int result = value % mod;

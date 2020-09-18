@@ -8,6 +8,7 @@ public class ProjectileData
 {
     public float damage = 1f;
     public float speed = 20f;
+    public float rotationSpeed = 7f;
     public float lifeTime = 2f;
     public bool destroyOnHit = true;
 }
@@ -15,10 +16,9 @@ public class ProjectileData
 public class Projectile : MonoBehaviour
 {
     public ProjectileData projectileData;
-
     public LayerMask layerMask;
-
     public UnityEvent onHit;
+    public Transform target;
 
     private void Start()
     {
@@ -27,6 +27,7 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject, projectileData.lifeTime);
         }
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

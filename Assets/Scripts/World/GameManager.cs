@@ -14,24 +14,31 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public int killCounter;
     public BoxCollider2D arenaBounds;
 
-    public PlayerInput PlayerInput { get; private set; }
-    public GameObject Player { get; private set; }
-    public UIManager UIManager { get; private set; }
-
-    private List<Projectile> currentProjectiles;
+    private List<EnemyController> enemies;
     private List<Cruiser> cruisers;
     private Vector2 playerPosLastFrame;
     private SpaceBackgroundScroller uvScroller;
 
     private List<GameObject> worldObjects;
 
+    // Player
+    public PlayerInput PlayerInput { get; private set; }
+    public GameObject Player { get; private set; }
+
+    // Managers
+    public UIManager UIManager { get; private set; }
+    public ProjectileManager ProjectileManager { get; private set; }
     public CameraController CameraController { get; private set; }
+
+    // Runtime
     public GameState GameState { get; private set; }
     public Cruiser ClosestCruiser { get; private set; }
 
+    // Highscores
     public int[] HighScores { get; private set; }
     public string[] HighScoreNames { get; private set; }
 
+    // Constants
     private const int HIGHSCORE_LIST_COUNT = 10;
     private const string HIGHSCORE_SERIALIZED_NUMBERKEY = "Highscore";
     private const string HIGHSCORE_SERIALIZED_NAMEKEY = "HighscoreName";
@@ -43,17 +50,18 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         CameraController = FindObjectOfType<CameraController>();
         PlayerInput = FindObjectOfType<PlayerInput>();
         UIManager = FindObjectOfType<UIManager>();
-       
+        ProjectileManager = FindObjectOfType<ProjectileManager>();
+
         uvScroller = FindObjectOfType<SpaceBackgroundScroller>();
 
-        currentProjectiles = new List<Projectile>();
         worldObjects = new List<GameObject>();
         cruisers = new List<Cruiser>();
+        enemies = new List<EnemyController>();
 
         HighScores = new int[HIGHSCORE_LIST_COUNT];
         HighScoreNames = new string[HIGHSCORE_LIST_COUNT];
 
-        GetHighScores();
+        LoadHighScores();
 
         GameState = GameState.MainMenu;
         UIManager.SetMenuActive(GameState);      
@@ -61,21 +69,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
     private void Update()
     {
-        UpdateProjectiles();
-
-        if (Player != null)
-        {
-            Vector2 playerDeltaPos = ((Vector2)Player.transform.position - playerPosLastFrame);
-            uvScroller.Scroll(playerDeltaPos);
-            playerPosLastFrame = Player.transform.position;
-
-            if (Time.frameCount % 10 == 0) // Run every tenth frame
-            {
-                ClosestCruiser = GetClosestCruiser(Player.transform.position);
-                UIManager.objectiveArrow.target = ClosestCruiser != null ? ClosestCruiser.transform : null;
-            }
-        }
-
+        UpdateClosestCruiserToPlayer();
         UIManager.SetKillCounterText(killCounter.ToString());
 
         if (GameState != GameState.IsRunning)
@@ -83,6 +77,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             uvScroller.Scroll(Vector2.up * Time.deltaTime);
         }
 
+        // Debug Input
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
         {
             ClearHighscores();
@@ -102,19 +97,31 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         GameState = GameState.None;
     }
 
-    private void SpawnWorldObjects()
+    public void IncreaseKillCounter()
     {
-        for (int x = 0; x < arenaBounds.bounds.size.x; x++)
-        {
-            for (int y = 0; y < arenaBounds.bounds.size.y; y++)
-            {
-                if (Random.Range(0f, 1f) > gameData.worldObjectSpawnChance) continue;
+        if (GameState != GameState.IsRunning) return;
 
-                Vector2 randomOffset = Random.insideUnitCircle;
-                Vector2 pos = (new Vector2(x, y) + randomOffset) - (Vector2)arenaBounds.bounds.extents;
-                worldObjects.Add(
-                    Instantiate(gameData.worldObjects[Random.Range(0, gameData.worldObjects.Length)], pos, Quaternion.identity)
-                );
+        killCounter++;
+    }
+
+    public void UpdatePlayerName()
+    {
+        playerName = UIManager.nameInput.text;
+    }
+
+    #region Cruisers 
+    private void UpdateClosestCruiserToPlayer()
+    {
+        if (Player != null)
+        {
+            Vector2 playerDeltaPos = ((Vector2)Player.transform.position - playerPosLastFrame);
+            uvScroller.Scroll(playerDeltaPos);
+            playerPosLastFrame = Player.transform.position;
+
+            if (Time.frameCount % 10 == 0) // Run every tenth frame
+            {
+                ClosestCruiser = GetClosestCruiser(Player.transform.position);
+                UIManager.objectiveArrow.target = ClosestCruiser != null ? ClosestCruiser.transform : null;
             }
         }
     }
@@ -135,35 +142,75 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     {
         cruisers.RemoveAll(x => x == null);
 
-        Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds);
+        Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds, gameData.spawningPadding);
         Cruiser cruiser = Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
         cruisers.Add(cruiser);
 
         UIManager.PromptIfEmpty(2f, MK.UI.TransitionPreset.ScaleIn, "An enemy cruiser has arrived!");
+
+        DestroyWorldObjectsAroundPos(pos, gameData.cruiserClearRadius);
     }
 
-    private void UpdateProjectiles()
+    public Cruiser GetClosestCruiser(Vector2 pos)
     {
-        if (Time.frameCount % 2 == 0)
+        Cruiser closestCruiser = null;
+        float closestDistance = float.MaxValue;
+        for (int i = 0; i < cruisers.Count; i++)
         {
-            currentProjectiles.RemoveAll(x => x == null);
-        }
+            if (cruisers[i] == null) continue;
 
-        foreach (Projectile projectile in currentProjectiles)
-        {
-            if (projectile == null)
+            float distance = Vector2.Distance(pos, (Vector2)cruisers[i].transform.position);
+            if (distance < closestDistance)
             {
-                continue;
-            }
-
-            if (projectile.projectileData.speed != 0)
-            {
-                // TODO: Shouldn't this need to be projectile.transform.right? Why does the global Vector2.right work here?
-                projectile.transform.Translate(Vector2.right * projectile.projectileData.speed * Time.deltaTime);
+                closestCruiser = cruisers[i];
+                closestDistance = distance;
             }
         }
+
+        return closestCruiser;
+    }
+    #endregion
+
+    #region Enemies
+    public void SpawnEnemy(EnemyController enemyPrefab, Vector2 pos)
+    {
+        EnemyController spawnedEnemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
+
+        if (Player != null)
+        {
+            spawnedEnemy.chaseTarget = Player.transform;
+        }
+
+        enemies.Add(spawnedEnemy);
     }
 
+    public EnemyController GetClosestEnemyToPos(Vector2 pos)
+    {
+        bool enemyDeadFlag = false;
+
+        EnemyController closestEnemy = null;
+        float closestDistance = float.MaxValue;
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemies[i] == null) { enemyDeadFlag = true; continue; }
+
+            float distance = Vector2.Distance(pos, enemies[i].transform.position);
+            if (distance < closestDistance)
+            {
+                closestEnemy = enemies[i];
+                closestDistance = distance;
+            }
+        }
+
+        if (enemyDeadFlag) enemies.RemoveAll(x => x == null);
+
+        return closestEnemy;
+    }
+
+    #endregion
+
+    #region Pickups 
     public PickupInteractable SpawnPickup(string name, Vector2 pos)
     {
         Pickup pickupToSpawn = gameData.GetPickup(name);
@@ -183,73 +230,9 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
         return null;
     }
+    #endregion
 
-    public Projectile[] SpawnBullets(Projectile projectilePrefab, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
-    {
-        Projectile[] spawnedBullets = new Projectile[firePositions.Length];
-        for (int i = 0; i < firePositions.Length; i++)
-        {
-            spawnedBullets[i] = SpawnBullet(projectilePrefab, firePositions, i, relativeVelocity, useRelativeBulletSpeed, projectileData);
-        }
-
-        return spawnedBullets;
-    }
-
-    public Projectile SpawnBullet(Projectile projectilePrefab, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
-    {
-        Projectile spawnedBullet = Instantiate(projectilePrefab, firePositions[fireIndex].position, Quaternion.identity);
-        spawnedBullet.transform.right = firePositions[fireIndex].right;
-        InitBullet(spawnedBullet, relativeVelocity, useRelativeBulletSpeed, projectileData);
-
-        return spawnedBullet;
-    }
-
-    protected void InitBullet(Projectile projectile, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
-    {
-        if (useRelativeBulletSpeed)
-        {
-            relativeVelocity = Mathf.Max(relativeVelocity, 0);
-            projectile.projectileData.speed += relativeVelocity;
-        }
-
-        if (projectileData != null)
-        {
-            projectile.projectileData = projectileData;
-        }
-
-        currentProjectiles.Add(projectile);
-    }
-
-    public void IncreaseKillCounter()
-    {
-        if (GameState != GameState.IsRunning) return;
-
-        killCounter++;
-    }
-
-    public void StartGame()
-    {
-
-        // Init Player
-        SpawnPlayer();
-
-        // Init World
-        SpawnWorldObjects();
-
-        GameState = GameState.IsRunning;
-        
-        // Enable Game UI and close menu.
-        UIManager.SetMenuActive(GameState);
-
-        SpawnCruiserAtRandomPos();
-        StartCoroutine(DoSpawnEnemyCruisers());
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
+    #region GeneralSpawning
     private void SpawnPlayer()
     {
         Player = Instantiate(gameData.playerPrefab, Vector2.zero, Quaternion.identity);
@@ -268,67 +251,25 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         uvScroller.Target = Player.transform;
 
         UIManager.AssignPlayerReference();
+
+        DestroyWorldObjectsAroundPos(Player.transform.position, gameData.playerClearRadius);
     }
 
-    public void GameOver()
+    private void SpawnWorldObjects()
     {
-        if (GameState != GameState.GameOverSequence)
+        for (int x = 0; x < arenaBounds.bounds.size.x; x++)
         {
-            StartCoroutine(DoGameOver());
-        }     
-    }
+            for (int y = 0; y < arenaBounds.bounds.size.y; y++)
+            {
+                if (Random.Range(0f, 1f) > gameData.worldObjectSpawnChance) continue;
 
-    private IEnumerator DoGameOver()
-    {
-        float gameOverTextTime = 2f;
-        float killCounterTextTime = 3f;
-        float highscoreTextTime = 2f;
-
-        GameState = GameState.GameOverSequence;
-
-        // Game over text
-        UIManager.Prompt(gameOverTextTime, MK.UI.TransitionPreset.LeftToRight, "Game Over!");
-        yield return new WaitForSeconds(gameOverTextTime);
-
-        // Show kill count
-        UIManager.Prompt(killCounterTextTime, MK.UI.TransitionPreset.LeftToRight, "You got " + killCounter + " kills!");
-        yield return new WaitForSeconds(killCounterTextTime);
-
-        // Save score
-        int newHighScorePlace = SaveNewScore(killCounter);
-        if (newHighScorePlace >= 0)
-        {
-            UIManager.Prompt(highscoreTextTime, MK.UI.TransitionPreset.LeftToRight, "New Highscore Placing! (" + (newHighScorePlace + 1) + ")");
-            yield return new WaitForSeconds(highscoreTextTime);
+                Vector2 randomOffset = Random.insideUnitCircle;
+                Vector2 pos = (new Vector2(x, y) + randomOffset) - (Vector2)arenaBounds.bounds.extents;
+                worldObjects.Add(
+                    Instantiate(gameData.worldObjects[Random.Range(0, gameData.worldObjects.Length)], pos, Quaternion.identity)
+                );
+            }
         }
-
-        ReturnToMainMenu(true);
-    }
-
-    public void ReturnToMainMenu()
-    {
-        ReturnToMainMenu(false);
-    }
-
-    public void ReturnToMainMenu(bool clearGameWorld = false)
-    {
-        if (GameState == GameState.MainMenu) return;
-
-        if (clearGameWorld || GameState == GameState.IsRunning)
-        {
-            ClearGameWorld();
-        }
-
-        GameState = GameState.MainMenu;
-        UIManager.SetMenuActive(GameState);
-    }
-
-    public void OpenHighscoreScreen()
-    {
-        if (GameState != GameState.MainMenu) return;
-
-        GameState = GameState.HighScore;
-        UIManager.SetMenuActive(GameState);
     }
 
     private void ClearGameWorld()
@@ -369,12 +310,116 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         CameraController.ResetPos();
     }
 
-    public void GetHighScores()
+    public void DestroyWorldObjectsAroundPos(Vector2 pos, float radius)
+    {
+        for (int i = 0; i < worldObjects.Count; i++)
+        {
+            if (worldObjects[i] == null) continue;
+
+            float distance = Vector2.Distance(worldObjects[i].transform.position, pos);
+            if (distance < radius)
+            {
+                Destroy(worldObjects[i]);
+            }
+        }
+
+        worldObjects.RemoveAll(x => x == null);
+    }
+    #endregion
+
+    #region StartAndEnd
+    public void StartGame()
+    {
+        // Init Player
+        SpawnPlayer();
+
+        // Init World
+        SpawnWorldObjects();
+
+        GameState = GameState.IsRunning;
+
+        // Enable Game UI and close menu.
+        UIManager.SetMenuActive(GameState);
+
+        SpawnCruiserAtRandomPos();
+        StartCoroutine(DoSpawnEnemyCruisers());
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void GameOver()
+    {
+        if (GameState != GameState.GameOverSequence)
+        {
+            StartCoroutine(DoGameOver());
+        }     
+    }
+
+    private IEnumerator DoGameOver()
+    {
+        float gameOverTextTime = 2f;
+        float killCounterTextTime = 3f;
+        float highscoreTextTime = 2f;
+
+        GameState = GameState.GameOverSequence;
+
+        // Game over text
+        UIManager.Prompt(gameOverTextTime, MK.UI.TransitionPreset.LeftToRight, "Game Over!");
+        yield return new WaitForSeconds(gameOverTextTime);
+
+        // Show kill count
+        UIManager.Prompt(killCounterTextTime, MK.UI.TransitionPreset.LeftToRight, "You got " + killCounter + " kills!");
+        yield return new WaitForSeconds(killCounterTextTime);
+
+        // Save score
+        int newHighScorePlace = SaveNewScore(killCounter);
+        if (newHighScorePlace >= 0)
+        {
+            UIManager.Prompt(highscoreTextTime, MK.UI.TransitionPreset.LeftToRight, "New Highscore Placing! (" + (newHighScorePlace + 1) + ")");
+            yield return new WaitForSeconds(highscoreTextTime);
+        }
+
+        ReturnToMainMenu(true);
+    }
+    #endregion
+
+    #region Menu
+    public void ReturnToMainMenu()
+    {
+        ReturnToMainMenu(false);
+    }
+
+    public void ReturnToMainMenu(bool clearGameWorld = false)
+    {
+        if (GameState == GameState.MainMenu) return;
+
+        if (clearGameWorld || GameState == GameState.IsRunning)
+        {
+            ClearGameWorld();
+        }
+
+        GameState = GameState.MainMenu;
+        UIManager.SetMenuActive(GameState);
+    }
+    #endregion
+
+    #region HighScore
+    public void OpenHighscoreScreen()
+    {
+        if (GameState != GameState.MainMenu) return;
+
+        GameState = GameState.HighScore;
+        UIManager.SetMenuActive(GameState);
+    }
+
+    public void LoadHighScores()
     {     
         HighScores = new int[HIGHSCORE_LIST_COUNT];
         for (int i = 0; i < HighScores.Length; i++)
         {
-            Debug.Log("HAS KEEEYYS? " + PlayerPrefs.HasKey(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString()));
             HighScores[i] = PlayerPrefs.GetInt(HIGHSCORE_SERIALIZED_NUMBERKEY + i.ToString(), 0);
             HighScoreNames[i] = PlayerPrefs.GetString(HIGHSCORE_SERIALIZED_NAMEKEY + i.ToString(), "XXX");
         }
@@ -389,7 +434,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         }
     }
 
-    public void SetHighScores()
+    public void SaveHighScores()
     {
         for (int i = 0; i < HighScores.Length; i++)
         {
@@ -410,35 +455,12 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
                 System.Array.Copy(HighScoreNames, i, HighScoreNames, i + 1, HighScoreNames.Length - 1 - i);
                 HighScores[i] = score;
                 HighScoreNames[i] = playerName;
-                SetHighScores();
+                SaveHighScores();
                 return i;
             }
         }
        
         return -1;
     }
-
-    public Cruiser GetClosestCruiser(Vector2 pos)
-    {
-        Cruiser closestCruiser = null;
-        float closestDistance = float.MaxValue;
-        for (int i = 0; i < cruisers.Count; i++)
-        {
-            if (cruisers[i] == null) continue;
-
-            float distance = Vector2.Distance(pos, (Vector2)cruisers[i].transform.position);
-            if (distance < closestDistance)
-            {
-                closestCruiser = cruisers[i];
-                closestDistance = distance;
-            }
-        }
-
-        return closestCruiser;
-    }
-
-    public void UpdatePlayerName()
-    {
-        playerName = UIManager.nameInput.text;
-    }
+    #endregion
 }

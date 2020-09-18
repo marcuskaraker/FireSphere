@@ -21,19 +21,8 @@ public class EnemySpawner : MonoBehaviour
         {
             currentSpawnInterval = Random.Range(spawnIntervalRange.x, spawnIntervalRange.y);
             yield return new WaitForSeconds(currentSpawnInterval);
-            SpawnEnemy();
+            GameManager.Instance.SpawnEnemy(GetRandomEnemyPrefab(), transform.position);
         }
-    }
-
-    private void SpawnEnemy()
-    {
-        EnemyController spawnedEnemy =  Instantiate(GetRandomEnemyPrefab(), transform.position, Quaternion.identity);
-
-        if (GameManager.Instance.Player)
-        {
-            spawnedEnemy.chaseTarget = GameManager.Instance.Player.transform;
-        }
-        
     }
 
     private EnemyController GetRandomEnemyPrefab()

@@ -15,20 +15,22 @@ public class WeaponPickup : Pickup
 {
     public Weapon weapon;
 
-    public override void Interact(GameObject target, InstancePickupData instancePickupData)
+    public override bool Interact(GameObject target, InstancePickupData instancePickupData)
     {
         Shooter shooter = target.GetComponent<Shooter>();
         if (shooter)
         {
             if (instancePickupData is InstanceWeaponPickupData instanceWeaponPickupData)
             {
-                shooter.EquipWeapon(weapon, instanceWeaponPickupData.durability);
+                return shooter.EquipWeaponAtFirstAvailableSlot(weapon, instanceWeaponPickupData.durability);
             }
             else
             {
-                shooter.EquipWeapon(weapon);
-            }
+                return shooter.EquipWeaponAtFirstAvailableSlot(weapon);
+            }          
         }
+
+        return false;
     }
 
     public override InstancePickupData NewInstanceData()

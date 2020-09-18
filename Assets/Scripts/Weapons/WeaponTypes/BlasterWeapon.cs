@@ -7,13 +7,15 @@ public class BlasterWeapon : Weapon
     public Projectile projectilePrefab;
 
     public bool useRelativeBulletSpeed;
+    public bool targetClosestEnemy;
 
     public override bool Fire(Shooter shooter)
     {
+        Projectile[] spawnedProjectiles = null;
         switch (barrelFireMode)
         {
             case BarrelFireMode.FireAll:
-                GameManager.Instance.SpawnBullets(
+                spawnedProjectiles = GameManager.Instance.ProjectileManager.SpawnBullets(
                     projectilePrefab, 
                     shooter.firePositions, 
                     shooter.LatestRelativeVelocity,
@@ -22,7 +24,8 @@ public class BlasterWeapon : Weapon
                 );
                 break;
             case BarrelFireMode.TurnFire:
-                GameManager.Instance.SpawnBullet(
+                spawnedProjectiles = new Projectile[1];
+                spawnedProjectiles[0] = GameManager.Instance.ProjectileManager.SpawnBullet(
                     projectilePrefab, 
                     shooter.firePositions, 
                     shooter.firePointIndex, 
@@ -32,6 +35,19 @@ public class BlasterWeapon : Weapon
                 );
                 shooter.firePointIndex = (shooter.firePointIndex + 1) % shooter.firePositions.Length;
                 break;
+        }
+
+        // Targeting
+        if (targetClosestEnemy)
+        {
+            for (int i = 0; i < spawnedProjectiles.Length; i++)
+            {
+                EnemyController closestEnemy = GameManager.Instance.GetClosestEnemyToPos(shooter.transform.position);
+                if (closestEnemy != null)
+                {
+                    spawnedProjectiles[i].target = closestEnemy.transform;
+                }               
+            }
         }
 
         shooter.currentClipSize -= 1f;

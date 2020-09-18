@@ -6,13 +6,16 @@ public class HealthPickup : Pickup
 {
     public float health = 10f;
 
-    public override void Interact(GameObject target, InstancePickupData instancePickupData)
+    public override bool Interact(GameObject target, InstancePickupData instancePickupData)
     {
         Destructible destructible = target.GetComponent<Destructible>();
         if (destructible)
         {
             destructible.Hurt(-health);
+            return true;
         }
+
+        return false;
     }
 
     public override InstancePickupData NewInstanceData()

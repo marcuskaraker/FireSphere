@@ -7,6 +7,9 @@ public class Shooter : MonoBehaviour
 {
     public Weapon[] loadout;
     [NonSerialized] public float[] durability;
+    public int lockLoadoutSlotCount = 1;
+
+    [Space]
     public Transform[] firePositions;
     public bool recoilRigidbody = true;
 
@@ -34,7 +37,7 @@ public class Shooter : MonoBehaviour
 
         durability = new float[loadout.Length];
 
-        EquipWeapon(loadout[CurrentWeaponIndex], 1, false);
+        EquipWeapon(loadout[CurrentWeaponIndex], CurrentWeaponIndex, 1, false);
     }
 
     private void Update()
@@ -71,7 +74,7 @@ public class Shooter : MonoBehaviour
 
             if (durability[CurrentWeaponIndex] <= 0)
             {
-                EquipWeapon(null, 0, false);
+                EquipWeapon(null, CurrentWeaponIndex, 0, false);
             }
         }
 
@@ -89,27 +92,52 @@ public class Shooter : MonoBehaviour
     /// <summary>
     /// Equips the set weapon and sets its durability. Durability is a value from 0-1.
     /// </summary>
-    public void EquipWeapon(Weapon weapon, float durability = 1f, bool dropWeapon = true)
+    public void EquipWeapon(Weapon weapon, int slotIndex, float durability = 1f, bool dropWeapon = true)
     {
-        if (dropWeapon && loadout[CurrentWeaponIndex] != null && loadout[CurrentWeaponIndex].weaponDropPickup != null)
+        if (dropWeapon && loadout[slotIndex] != null && loadout[slotIndex].weaponDropPickup != null)
         {
             PickupInteractable spawnedPickup = GameManager.Instance.SpawnPickup(
-                loadout[CurrentWeaponIndex].weaponDropPickup, 
+                loadout[slotIndex].weaponDropPickup, 
                 transform.position
             );
 
             if (spawnedPickup.instancePickupData is InstanceWeaponPickupData instanceWeaponPickupData)
             {
-                instanceWeaponPickupData.durability = GetDurabilityPercentageOfWeapon(CurrentWeaponIndex);
+                instanceWeaponPickupData.durability = GetDurabilityPercentageOfWeapon(slotIndex);
             }
         }
 
-        loadout[CurrentWeaponIndex] = weapon;
-        this.durability[CurrentWeaponIndex] = weapon != null ? Mathf.Clamp01(durability) * weapon.durability : 0;
+        loadout[slotIndex] = weapon;
+        this.durability[slotIndex] = weapon != null ? Mathf.Clamp01(durability) * weapon.durability : 0;
 
         if (weapon == null) return;
 
         currentClipSize = weapon.clipSize;
+    }
+
+    /// <summary>
+    /// Equips a weapon at the first available slot. Returns true if successful. Durability is a value from 0-1.
+    /// </summary>
+    public bool EquipWeaponAtFirstAvailableSlot(Weapon weapon, float durability = 1f, bool dropWeapon = true)
+    {
+        // See if there is an empty valid slot. Equip weapon there.
+        for (int i = 0; i < loadout.Length; i++)
+        {
+            if (i > (lockLoadoutSlotCount - 1) && loadout[i] == null)
+            {
+                EquipWeapon(weapon, i, durability, dropWeapon);
+                return true;
+            }
+        }
+
+        // See if currently selected slot is valid. Equip weapon there.
+        if (CurrentWeaponIndex > (lockLoadoutSlotCount - 1))
+        {
+            EquipWeapon(weapon, CurrentWeaponIndex, durability, dropWeapon);
+            return true;
+        }
+
+        return false;
     }
 
     public bool CompareWeaponFireMode(FireMode fireMode)

@@ -25,9 +25,15 @@ public class PickupInteractable : MonoBehaviour
             return false;
         }
 
-        pickupData.Interact(target, instancePickupData);
-        Destroy(gameObject);
-        return true;
+        bool pickupSuccess = pickupData.Interact(target, instancePickupData);
+
+        if (pickupSuccess)
+        {
+            Destroy(gameObject);
+            return true;
+        }
+
+        return false;
     }
 
     private IEnumerator DoEnableAfterTime()
