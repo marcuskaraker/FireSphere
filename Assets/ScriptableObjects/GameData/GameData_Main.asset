@@ -31,3 +31,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
   playerClearRadius: 3
   cruiserClearRadius: 5
+  mainTheme: {fileID: 8300000, guid: d954c42a219d42d45b6117374b082226, type: 3}
+  mainThemeVolume: 0.15
+  engineAudio: {fileID: 8300000, guid: eb9c801303e33ee4c9bed4077a37958a, type: 3}
+  engineVolume: 0.5
+  shieldAudio: {fileID: 8300000, guid: 0f5d8da1ee175f14d87de5c760548e55, type: 3}
+  shieldVolume: 0.5

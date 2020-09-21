@@ -1,5 +1,3 @@
-* Object pooling
-
 * Add sound
 
 * Add other input
@@ -24,12 +22,13 @@
 * Add enemy encyclepedia
 
 ## BUGS:
-	* Cruisers spawn inside asteroids
-		- Destroy asteroids on crusier spawn?
-	* Crosshair should be on UI Canvas
-	* Clear world should clean up all objects (including pickups)
+	* ObjectPool is acting weird when iti s not initialized with CreatePool
 
 
 
                 // TODO: Shouldn't this need to be projectile.transform.right? Why does the global Vector2.right work here?
                 projectile.transform.Translate(Vector2.right * projectile.projectileData.speed * Time.deltaTime);
+
+
+
+

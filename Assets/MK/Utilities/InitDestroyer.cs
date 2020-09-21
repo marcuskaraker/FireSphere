@@ -1,11 +1,23 @@
 ﻿using UnityEngine;
 
-public class InitDestroyer : MonoBehaviour
+namespace MK
 {
-    [SerializeField] float timeToDestroy = 2f;
-
-    private void Awake()
+    public class InitDestroyer : MonoBehaviour
     {
-        Destroy(gameObject, timeToDestroy);
+        [SerializeField] float timeToDestroy = 2f;
+        [SerializeField] bool objectPool;        
+
+        private void Awake()
+        {
+            if (objectPool)
+            {
+                ObjectPoolManager.DeSpawn(gameObject, timeToDestroy);
+            }
+            else
+            {
+                Destroy(gameObject, timeToDestroy);
+            }
+        }
     }
 }
+

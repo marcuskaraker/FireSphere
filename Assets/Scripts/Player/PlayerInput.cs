@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using MK.Audio;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerInput : MonoBehaviour
     public float sprintFuelDecreaseSpeed = 1f;
     public float sprintFuelIncreaseSpeed = 1f;
 
+    [Header("Input")]
     public KeyCode fireKey = KeyCode.Mouse0;
     public KeyCode shieldKey = KeyCode.Mouse1;
     public KeyCode reloadKey = KeyCode.R;
@@ -16,6 +18,9 @@ public class PlayerInput : MonoBehaviour
 
     private Transform playerSprite;
     private Camera mainCamera;
+
+    private AudioSource engineAudioSource;
+    private AudioSource shieldAudioSource;
 
     private KeyCode[] NumberKeys = { KeyCode.Alpha0,
         KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
@@ -44,6 +49,24 @@ public class PlayerInput : MonoBehaviour
     {
         ControlTarget = controlTarget;
         mainCamera = Camera.main;
+
+        engineAudioSource = AudioManager.Play(
+            GameManager.Instance.gameData.engineAudio,
+            Vector3.zero,
+            GameManager.Instance.gameData.engineVolume,
+            true,
+            "engine"
+        );
+
+        shieldAudioSource = AudioManager.Play(
+            GameManager.Instance.gameData.shieldAudio,
+            Vector3.zero,
+            GameManager.Instance.gameData.shieldVolume,
+            true,
+            "shield"
+        );
+
+        shieldAudioSource.pitch = 0.75f;
     }
 
     private void Update()
@@ -56,6 +79,8 @@ public class PlayerInput : MonoBehaviour
 
         if (ControlTarget == null)
         {
+            engineAudioSource.volume = 0f;
+            shieldAudioSource.volume = 0f;
             return;
         }
 
@@ -126,5 +151,14 @@ public class PlayerInput : MonoBehaviour
             sprintFuel += Time.deltaTime * sprintFuelIncreaseSpeed;
             sprintFuel = Mathf.Clamp01(sprintFuel);
         }
+
+        // Audio
+
+        engineAudioSource.volume = GameManager.Instance.gameData.engineVolume;
+
+        float enginePitch = Vector3.Dot(Movement.Rb2D.velocity, Movement.direction);
+
+        engineAudioSource.pitch = Movement.IsSprinting ? 1f : 0.3f;
+        shieldAudioSource.volume = shieldEffect.ShieldState == ShieldState.Open ? GameManager.Instance.gameData.shieldVolume : 0f;
     }
 }

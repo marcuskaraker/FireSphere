@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using MK.Audio;
+using MK;
 
 public enum BarrelFireMode { FireAll, TurnFire }
 public enum FireMode { Single, Automatic, Burst }
@@ -15,6 +17,12 @@ public abstract class Weapon : ScriptableObject
 
     public ProjectileData projectileData;
 
+    [Header("Audio")]
+    public AudioClipGroup fireSounds;
+    public float fireSoundVolume = 1f;
+    public MinMax pitchVariation = new MinMax(0.9f, 1.1f);
+
+    [Header("Stats")]
     [Space]
     [Tooltip("The durability of the weapon. If negative, the durability is infinite.")]
     public float durability = -1;
@@ -28,5 +36,10 @@ public abstract class Weapon : ScriptableObject
     public virtual void Reload(Shooter shooter)
     {
         shooter.currentClipSize = clipSize;
+    }
+
+    public void PlayFireSound(Vector3 position, float volume)
+    {
+        AudioManager.PlayOneShot(fireSounds.GetClip(), position, volume, pitchVariation);
     }
 }

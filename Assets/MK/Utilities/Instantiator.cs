@@ -5,10 +5,16 @@ namespace MK
     public class Instantiator : MonoBehaviour
     {
         public GameObject[] objectsToSpawn;
+        public int newPoolSize = 100;
 
         public void SpawnObject(GameObject go)
         {
             Instantiate(go, transform.position, Quaternion.identity);
+        }
+
+        public void SpawnObjectFromPool(GameObject go)
+        {
+            ObjectPoolManager.Spawn(go, transform.position, Quaternion.identity, newPoolSize);
         }
 
         public void SpawnRandomObjectFromList()

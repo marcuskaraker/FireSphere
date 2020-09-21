@@ -20,8 +20,15 @@ MonoBehaviour:
   projectileData:
     damage: 3
     speed: 20
+    rotationSpeed: 7
     lifeTime: 2
     destroyOnHit: 1
+  fireSounds:
+    audioClips:
+    - {fileID: 8300000, guid: bb4d470f8c3358b419698c554b825e7e, type: 3}
+    - {fileID: 8300000, guid: 31bc21afe45137244b022a6571c2a87c, type: 3}
+  fireSoundVolume: 0.1
+  pitchVariation: 0.25
   durability: 100
   range: 10
   fireRate: 0.1
@@ -29,3 +36,4 @@ MonoBehaviour:
   recoil: 0.5
   projectilePrefab: {fileID: 7475593793509080615, guid: 27e17e951a8188340b3c1ebd94c4ae59, type: 3}
   useRelativeBulletSpeed: 1
+  targetClosestEnemy: 0

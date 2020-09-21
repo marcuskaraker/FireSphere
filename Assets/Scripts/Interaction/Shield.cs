@@ -35,14 +35,15 @@ public class Shield : MonoBehaviour
         SetShield(false, false);
     }
 
-    public void ActivateShield()
+    public bool ActivateShield()
     {
         if (!canUseShield || target == null)
         {
-            return;
+            return false;
         }
 
         StartCoroutine(DoShieldCooldown());
+        return true;
     }
 
     private void LateUpdate()
@@ -78,8 +79,6 @@ public class Shield : MonoBehaviour
         }
 
         ShieldTimer = Mathf.Max(0, ShieldTimer);
-
-        //yield return new WaitForSeconds(shieldDuration);
 
         SetShield(false);
 

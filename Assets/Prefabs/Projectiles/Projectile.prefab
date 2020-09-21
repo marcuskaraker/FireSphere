@@ -132,6 +132,7 @@ MonoBehaviour:
   projectileData:
     damage: 1
     speed: 20
+    rotationSpeed: 7
     lifeTime: 2
     destroyOnHit: 1
   layerMask:
@@ -164,6 +165,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  target: {fileID: 0}
 --- !u!58 &989099694970102132
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -193,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectsToSpawn: []
+  newPoolSize: 100
 --- !u!114 &8776101911029427531
 MonoBehaviour:
   m_ObjectHideFlags: 0

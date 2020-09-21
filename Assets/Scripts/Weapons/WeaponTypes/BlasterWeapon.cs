@@ -16,25 +16,30 @@ public class BlasterWeapon : Weapon
         {
             case BarrelFireMode.FireAll:
                 spawnedProjectiles = GameManager.Instance.ProjectileManager.SpawnBullets(
-                    projectilePrefab, 
+                    projectilePrefab,
+                    projectileData,
                     shooter.firePositions, 
                     shooter.LatestRelativeVelocity,
-                    useRelativeBulletSpeed, 
-                    projectileData
+                    useRelativeBulletSpeed
                 );
                 break;
             case BarrelFireMode.TurnFire:
                 spawnedProjectiles = new Projectile[1];
                 spawnedProjectiles[0] = GameManager.Instance.ProjectileManager.SpawnBullet(
-                    projectilePrefab, 
+                    projectilePrefab,
+                    projectileData,
                     shooter.firePositions, 
                     shooter.firePointIndex, 
                     shooter.LatestRelativeVelocity, 
-                    useRelativeBulletSpeed, 
-                    projectileData
+                    useRelativeBulletSpeed
                 );
                 shooter.firePointIndex = (shooter.firePointIndex + 1) % shooter.firePositions.Length;
                 break;
+        }
+
+        for (int i = 0; i < spawnedProjectiles.Length; i++)
+        {
+            PlayFireSound(shooter.firePositions[i].position, fireSoundVolume);
         }
 
         // Targeting

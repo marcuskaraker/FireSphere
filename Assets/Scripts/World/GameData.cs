@@ -26,6 +26,16 @@ public class GameData : ScriptableObject
     public float playerClearRadius = 3f;
     public float cruiserClearRadius = 6f;
 
+    [Header("Audio")]
+    public AudioClip mainTheme;
+    public float mainThemeVolume = 0.5f;
+    [Space]
+    public AudioClip engineAudio;
+    public float engineVolume = 0.1f;
+    [Space]
+    public AudioClip shieldAudio;
+    public float shieldVolume = 0.1f;
+
     Dictionary<string, Pickup> nameToPickupMap = new Dictionary<string, Pickup>();
 
     public void InitData()

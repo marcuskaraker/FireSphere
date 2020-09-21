@@ -6,9 +6,20 @@ public class ProjectileManager : MonoBehaviour
 {
     private List<Projectile> currentProjectiles;
 
+    [SerializeField] int projectilePoolSize = 300;
+    [SerializeField] Projectile[] allProjectilePrefabs;
+
     private void Awake()
     {
         currentProjectiles = new List<Projectile>();
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < allProjectilePrefabs.Length; i++)
+        {
+            ObjectPoolManager.CreatePool(allProjectilePrefabs[i], projectilePoolSize);
+        }
     }
 
     private void Update()
@@ -16,52 +27,56 @@ public class ProjectileManager : MonoBehaviour
         UpdateProjectiles();
     }
 
-    public Projectile[] SpawnBullets(Projectile projectilePrefab, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
+    public Projectile[] SpawnBullets(Projectile projectilePrefab, ProjectileData projectileData, Transform[] firePositions, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
     {
         Projectile[] spawnedBullets = new Projectile[firePositions.Length];
         for (int i = 0; i < firePositions.Length; i++)
         {
-            spawnedBullets[i] = SpawnBullet(projectilePrefab, firePositions, i, relativeVelocity, useRelativeBulletSpeed, projectileData);
+            spawnedBullets[i] = SpawnBullet(projectilePrefab, projectileData, firePositions, i, relativeVelocity, useRelativeBulletSpeed);
         }
 
         return spawnedBullets;
     }
 
-    public Projectile SpawnBullet(Projectile projectilePrefab, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
+    public Projectile SpawnBullet(Projectile projectilePrefab, ProjectileData projectileData, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
     {
-        Projectile spawnedBullet = Instantiate(projectilePrefab, firePositions[fireIndex].position, Quaternion.identity);
+        Projectile spawnedBullet = ObjectPoolManager.Spawn(
+            projectilePrefab,
+            firePositions[fireIndex].position,
+            Quaternion.identity
+        );
+
         spawnedBullet.transform.right = firePositions[fireIndex].right;
-        InitBullet(spawnedBullet, relativeVelocity, useRelativeBulletSpeed, projectileData);
+        InitBullet(spawnedBullet, projectileData, relativeVelocity, useRelativeBulletSpeed);
 
         return spawnedBullet;
     }
 
-    private void InitBullet(Projectile projectile, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true, ProjectileData projectileData = null)
+    private void InitBullet(Projectile projectile, ProjectileData projectileData, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
     {
+        projectile.projectileData = projectileData;
+
         if (useRelativeBulletSpeed)
         {
             relativeVelocity = Mathf.Max(relativeVelocity, 0);
-            projectile.projectileData.speed += relativeVelocity;
-        }
-
-        if (projectileData != null)
-        {
-            projectile.projectileData = projectileData;
+            //projectile.projectileData.speed += relativeVelocity;
         }
 
         currentProjectiles.Add(projectile);
     }
 
+    public void RemoveProjectileFromList(Projectile projectile)
+    {
+        currentProjectiles.Remove(projectile);
+    }
+
     private void UpdateProjectiles()
     {
-        if (Time.frameCount % 2 == 0)
-        {
-            currentProjectiles.RemoveAll(x => x == null);
-        }
+        currentProjectiles.RemoveAll(x => !x.gameObject.activeSelf);
 
         foreach (Projectile projectile in currentProjectiles)
         {
-            if (projectile == null)
+            if (projectile == null || !projectile.gameObject.activeSelf)
             {
                 continue;
             }

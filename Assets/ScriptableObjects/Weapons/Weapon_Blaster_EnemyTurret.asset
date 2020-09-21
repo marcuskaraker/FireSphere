@@ -14,16 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponIcon: {fileID: 1571786891402097675, guid: 2f45d910d5280bf4296c11684d963bc0, type: 3}
   weaponIconColor: {r: 1, g: 1, b: 1, a: 1}
+  weaponDropPickup: {fileID: 0}
   barrelFireMode: 1
   fireMode: 0
   projectileData:
     damage: 2
     speed: 20
+    rotationSpeed: 7
     lifeTime: 2
     destroyOnHit: 1
+  fireSounds:
+    audioClips:
+    - {fileID: 8300000, guid: bb4d470f8c3358b419698c554b825e7e, type: 3}
+    - {fileID: 8300000, guid: 31bc21afe45137244b022a6571c2a87c, type: 3}
+  fireSoundVolume: 0.1
+  pitchVariation:
+    min: 0.3
+    max: 0.6
+  durability: -1
   range: 10
   fireRate: 1
   clipSize: -1
   recoil: 0.5
   projectilePrefab: {fileID: 7475593793509080615, guid: a570ea1aca7554e499ade8d24e970d1f, type: 3}
   useRelativeBulletSpeed: 1
+  targetClosestEnemy: 0

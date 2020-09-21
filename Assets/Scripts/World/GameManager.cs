@@ -38,15 +38,20 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public int[] HighScores { get; private set; }
     public string[] HighScoreNames { get; private set; }
 
+    // Other
+    private Transform worldParent;
+
     // Constants
     private const int HIGHSCORE_LIST_COUNT = 10;
     private const string HIGHSCORE_SERIALIZED_NUMBERKEY = "Highscore";
     private const string HIGHSCORE_SERIALIZED_NAMEKEY = "HighscoreName";
+    private const string WORLD_PARENT_NAME = "World";
 
     private void Awake()
     {
         RegisterSingleton();
 
+        // Manager references.
         CameraController = FindObjectOfType<CameraController>();
         PlayerInput = FindObjectOfType<PlayerInput>();
         UIManager = FindObjectOfType<UIManager>();
@@ -54,17 +59,36 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
         uvScroller = FindObjectOfType<SpaceBackgroundScroller>();
 
+        // World entity lists.
         worldObjects = new List<GameObject>();
         cruisers = new List<Cruiser>();
         enemies = new List<EnemyController>();
 
+        // Highscores
         HighScores = new int[HIGHSCORE_LIST_COUNT];
         HighScoreNames = new string[HIGHSCORE_LIST_COUNT];
 
+        // World Parent.
+        GameObject worldParentObject = GameObject.Find(WORLD_PARENT_NAME);
+        if (worldParentObject != null)
+        {
+            worldParent = worldParentObject.transform;
+        }
+        else
+        {
+            worldParent = new GameObject(WORLD_PARENT_NAME).transform;
+        }
+
+        // Init game
         LoadHighScores();
 
         GameState = GameState.MainMenu;
         UIManager.SetMenuActive(GameState);      
+    }
+
+    private void Start()
+    {
+        MK.Audio.AudioManager.Play(gameData.mainTheme, Vector2.zero, gameData.mainThemeVolume, true, "maintheme");
     }
 
     private void Update()
@@ -266,7 +290,12 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
                 Vector2 randomOffset = Random.insideUnitCircle;
                 Vector2 pos = (new Vector2(x, y) + randomOffset) - (Vector2)arenaBounds.bounds.extents;
                 worldObjects.Add(
-                    Instantiate(gameData.worldObjects[Random.Range(0, gameData.worldObjects.Length)], pos, Quaternion.identity)
+                    Instantiate(
+                        gameData.worldObjects[Random.Range(0, gameData.worldObjects.Length)], 
+                        pos, 
+                        Quaternion.identity, 
+                        worldParent
+                    )
                 );
             }
         }
