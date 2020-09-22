@@ -1,7 +1,3 @@
-# FireSphere
- A Shoot 'em Up space game made in Unity
-
-# Controls
 Aim - "Mouse Cursor"
 Shoot - "Left Mouse Button"
 Shield - "Right Mouse Button"
