@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public Text killCounterText;
     public ObjectiveArrow objectiveArrow;
     public UIPromptDisplay promptDisplayPrefab;
+    public Text versionText;
 
     [Header("Loadout")]
     public LayoutGroup loadoutLayout;
@@ -65,6 +66,8 @@ public class UIManager : MonoBehaviour
         MainCamera = Camera.main;
 
         mainCanvasRect = mainCanvas.GetComponent<RectTransform>();
+
+        versionText.text = "v. " + Application.version;
     }
 
     private void Start()

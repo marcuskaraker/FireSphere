@@ -113,13 +113,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             uvScroller.Scroll(Vector2.up * Time.deltaTime);
         }
 
-        // Debug Input
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.L))
-        {
-            ClearHighscores();
-        }
-
-        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(KeyCode.K))
         {
             if (Player != null)
             {
