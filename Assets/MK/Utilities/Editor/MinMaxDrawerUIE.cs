@@ -7,11 +7,12 @@ public class MinMaxDrawerUIE : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        property.serializedObject.ApplyModifiedProperties();
+        property.serializedObject.Update();
+
         // Using BeginProperty / EndProperty on the parent property means that
         // prefab override logic works on the entire property.
         EditorGUI.BeginProperty(position, label, property);
-
-        property.serializedObject.Update();
 
         // Draw label
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
@@ -39,8 +40,8 @@ public class MinMaxDrawerUIE : PropertyDrawer
         minProperty.floatValue = propertyValues[0];
         maxProperty.floatValue = propertyValues[1];
 
-        property.serializedObject.ApplyModifiedProperties();
-
         EditorGUI.EndProperty();
+
+        property.serializedObject.ApplyModifiedProperties();
     }
 }

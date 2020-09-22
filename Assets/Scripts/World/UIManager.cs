@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     public GameObject gameUIParent;
     public GameObject mainMenuParent;
     public GameObject highscoreMenuParent;
+    public GameObject optionsMenuParent;
 
     [Space]
     public InputField nameInput;
@@ -44,11 +45,17 @@ public class UIManager : MonoBehaviour
     public Text highscoreTextPrefab;
     private List<Text> highscoreTextList;
 
+    [Header("Options")]
+    public Slider musicSlider;
+    public Slider sfxSlider;
+
     private RectTransform mainCanvasRect;
 
     public Camera MainCamera { get; private set; }
 
     private const float MAIN_MENU_BUTTON_ENABLE_TIME_INTERVAL = 0.1f;
+
+    private float cachedPlayerMaxHealth;
 
     private void Awake()
     {
@@ -82,6 +89,7 @@ public class UIManager : MonoBehaviour
 
         if (playerDestructible == null)
         {
+            UpdatePlayerHealthBar(0f);
             return;
         }
 
@@ -118,12 +126,24 @@ public class UIManager : MonoBehaviour
         killCounterText.text = text;
     }
 
-    public void UpdatePlayerHealthBar()
+    public void UpdatePlayerHealthBar(float overrideValue = -1)
     {
-        healthBar.SetValue(
-            playerDestructible.health / playerDestructible.maxHealth,
-            "HP: " + Mathf.RoundToInt(playerDestructible.health) + " / " + Mathf.RoundToInt(playerDestructible.maxHealth)
-        );
+        if (overrideValue < 0)
+        {
+            cachedPlayerMaxHealth = Mathf.RoundToInt(playerDestructible.maxHealth);
+
+            healthBar.SetValue(
+                playerDestructible.health / playerDestructible.maxHealth,
+                "HP: " + Mathf.RoundToInt(playerDestructible.health) + " / " + cachedPlayerMaxHealth
+            );
+        }
+        else
+        {
+            healthBar.SetValue(
+                overrideValue,
+                "HP: " + overrideValue + " / " + cachedPlayerMaxHealth
+            );
+        }
     }
 
     public void UpdatePlayerShieldBar()
@@ -212,6 +232,7 @@ public class UIManager : MonoBehaviour
         gameUIParent.SetActive(false);
         mainMenuParent.SetActive(false);
         highscoreMenuParent.SetActive(false);
+        optionsMenuParent.SetActive(false);
 
         switch (gameState)
         {
@@ -224,6 +245,9 @@ public class UIManager : MonoBehaviour
             case GameState.HighScore:
                 highscoreMenuParent.SetActive(true);
                 UpdateHighScoreList();
+                break;
+            case GameState.Options:
+                optionsMenuParent.SetActive(true);
                 break;
         }
 
@@ -250,6 +274,16 @@ public class UIManager : MonoBehaviour
                 GameManager.Instance.HighScoreNames[i]
             );
         }
+    }
+
+    public void SetMusicVolume()
+    {
+        GameManager.Instance.SetMusicVolume(musicSlider.value);
+    }
+
+    public void SetSFXVolume()
+    {
+        GameManager.Instance.SetSFXVolume(sfxSlider.value);
     }
 
     private IEnumerator DoEnableMainMenuButtons(bool value, float waitTime)

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 989099694970102132}
   - component: {fileID: 1209019972732211595}
   - component: {fileID: 8776101911029427531}
+  - component: {fileID: 1618322271245165824}
   m_Layer: 10
   m_Name: Projectile
   m_TagString: Untagged
@@ -165,6 +166,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1618322271245165824}
+        m_TargetAssemblyTypeName: MK.Audio.AudioPlayer, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 16667efd93fe6424294d4180212da5df, type: 2}
+          m_ObjectArgumentAssemblyTypeName: MK.Audio.AudioContainer, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDestroy:
+    m_PersistentCalls:
+      m_Calls: []
   target: {fileID: 0}
 --- !u!58 &989099694970102132
 CircleCollider2D:
@@ -208,3 +224,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615da32ab4e3e2441bdaa64da76ba41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1618322271245165824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 989099694970102134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b003aa11644170b4bb0b37da82d850c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  minMaxPitch:
+    min: 1
+    max: 1

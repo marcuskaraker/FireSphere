@@ -6,20 +6,9 @@ public class ProjectileManager : MonoBehaviour
 {
     private List<Projectile> currentProjectiles;
 
-    [SerializeField] int projectilePoolSize = 300;
-    [SerializeField] Projectile[] allProjectilePrefabs;
-
     private void Awake()
     {
         currentProjectiles = new List<Projectile>();
-    }
-
-    private void Start()
-    {
-        for (int i = 0; i < allProjectilePrefabs.Length; i++)
-        {
-            ObjectPoolManager.CreatePool(allProjectilePrefabs[i], projectilePoolSize);
-        }
     }
 
     private void Update()
@@ -40,7 +29,7 @@ public class ProjectileManager : MonoBehaviour
 
     public Projectile SpawnBullet(Projectile projectilePrefab, ProjectileData projectileData, Transform[] firePositions, int fireIndex = 0, float relativeVelocity = 0f, bool useRelativeBulletSpeed = true)
     {
-        Projectile spawnedBullet = ObjectPoolManager.Spawn(
+        Projectile spawnedBullet = Instantiate(
             projectilePrefab,
             firePositions[fireIndex].position,
             Quaternion.identity
@@ -72,7 +61,7 @@ public class ProjectileManager : MonoBehaviour
 
     private void UpdateProjectiles()
     {
-        currentProjectiles.RemoveAll(x => !x.gameObject.activeSelf);
+        currentProjectiles.RemoveAll(x => x == null);
 
         foreach (Projectile projectile in currentProjectiles)
         {

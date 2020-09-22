@@ -21,7 +21,7 @@ namespace MK.Destructible
         {
             LastHitDamage = damage;
 
-            if (!canHurt) return;
+            if (!canHurt && damage >= 0) return;
 
             health -= damage;
             health = Mathf.Clamp(health, 0f, maxHealth);

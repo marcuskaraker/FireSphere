@@ -5,11 +5,16 @@ namespace MK.Audio
 {
     public class AudioManager : MonoBehaviorSingleton<AudioManager>
     {
+        public bool is2DAudio;
+        public Transform listener;
+
+        public float volumeMultiplier = 1f;
+
         Dictionary<string, AudioSource> audioSourceDictionary = new Dictionary<string, AudioSource>();
 
         private void Awake() => RegisterSingleton();
 
-        public static AudioSource Play(AudioClip audioClip, Vector3 position, float volume, bool loop, string audioKey)
+        public static AudioSource Play(AudioClip audioClip, Vector3 position, float volume, bool loop, string audioKey, float overrideVolumeMultiplier = -1)
         {
             if (Instance.audioSourceDictionary.ContainsKey(audioKey))
             {
@@ -18,7 +23,8 @@ namespace MK.Audio
             }
 
             AudioSource audioSource = SpawnAudioSource(position, -1);
-            audioSource.volume = volume;
+            audioSource.gameObject.name = "AudioSource(" + audioClip.name + ")";
+            audioSource.volume = overrideVolumeMultiplier < 0 ? volume * Instance.volumeMultiplier : volume * overrideVolumeMultiplier;
             audioSource.loop = loop;
             audioSource.clip = audioClip;
             audioSource.Play();
@@ -28,15 +34,24 @@ namespace MK.Audio
             return audioSource;
         }
 
-        public static AudioSource PlayOneShot(AudioClip audioClip, Vector3 position, float volume)
+        public static AudioSource PlayOneShot(AudioClip audioClip, float volume)
         {
-            return PlayOneShot(audioClip, position, volume, new MinMax(0, 0));
+            return PlayOneShot(audioClip, Vector3.zero, volume, 0f);
         }
 
-        public static AudioSource PlayOneShot(AudioClip audioClip, Vector3 position, float volume, MinMax pitchvariationInterval)
+        public static AudioSource PlayOneShot(AudioClip audioClip, Vector3 position, float volume, float spatialBlend = 0f)
         {
-            AudioSource audioSource = SpawnAudioSource(position, GetClipLength(audioClip));
-            audioSource.volume = volume;
+            return PlayOneShot(audioClip, position, volume, new MinMax(1, 1), spatialBlend);
+        }
+
+        public static AudioSource PlayOneShot(AudioClip audioClip, Vector3 position, float volume, MinMax pitchvariationInterval, float spatialBlend = 0f)
+        {
+            Vector3 spawnPosition = Instance.is2DAudio ? ListenerRelativePosition(position) : position;
+
+            AudioSource audioSource = SpawnAudioSource(spawnPosition, GetClipLength(audioClip));
+            audioSource.gameObject.name = "AudioSource(" + audioClip.name + ")";
+            audioSource.volume = volume * Instance.volumeMultiplier;
+            audioSource.spatialBlend = spatialBlend;
 
             float pitchVariation = Random.Range(pitchvariationInterval.min, pitchvariationInterval.max);
             audioSource.pitch = pitchVariation;
@@ -56,7 +71,7 @@ namespace MK.Audio
             return audioSource;
         }
 
-        public AudioSource GetAudioSourceByKey(string audioKey)
+        public static AudioSource GetAudioSourceByKey(string audioKey)
         {
             ClearAudioSourceDictionary();
 
@@ -69,7 +84,7 @@ namespace MK.Audio
             return null;
         }
 
-        public void ClearAudioSourceDictionary()
+        public static void ClearAudioSourceDictionary()
         {
             foreach (string audioKey in Instance.audioSourceDictionary.Keys)
             {
@@ -83,6 +98,11 @@ namespace MK.Audio
         private static float GetClipLength(AudioClip clip)
         {
             return clip.length + 0.05f;
+        }
+
+        private static Vector3 ListenerRelativePosition(Vector3 pos)
+        {
+            return new Vector3(pos.x, pos.y, pos.z + Instance.listener.position.z);
         }
     }
 

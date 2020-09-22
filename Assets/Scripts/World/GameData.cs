@@ -1,4 +1,5 @@
 ﻿using MK;
+using MK.Audio;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,14 +28,7 @@ public class GameData : ScriptableObject
     public float cruiserClearRadius = 6f;
 
     [Header("Audio")]
-    public AudioClip mainTheme;
-    public float mainThemeVolume = 0.5f;
-    [Space]
-    public AudioClip engineAudio;
-    public float engineVolume = 0.1f;
-    [Space]
-    public AudioClip shieldAudio;
-    public float shieldVolume = 0.1f;
+    public GameAudioData gameAudioData;
 
     Dictionary<string, Pickup> nameToPickupMap = new Dictionary<string, Pickup>();
 
@@ -58,4 +52,25 @@ public class GameData : ScriptableObject
         Debug.LogError("Tried to get a pickup that does not exist with key: " + name);
         return null;
     }
+}
+
+[System.Serializable]
+public struct GameAudioData
+{
+    public float audioSpatialBlend;
+    [Space]
+    public AudioClip mainTheme;
+    public float mainThemeVolume;
+    [Space]
+    public AudioClip engineAudio;
+    public float engineVolume;
+    [Space]
+    public AudioClip shieldAudio;
+    public float shieldVolume;
+    [Space]
+    public AudioClip cruiserMessageAudio;
+    public float cruiserMessageVolume;
+    [Space]
+    public AudioClip pickupAudio;
+    public float pickupAudioVolume;
 }

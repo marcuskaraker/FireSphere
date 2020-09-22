@@ -22,11 +22,12 @@ public struct ProjectileData
     }
 }
 
-public class Projectile : MonoBehaviour, IPoolObject
+public class Projectile : MonoBehaviour
 {
     public ProjectileData projectileData;
     public LayerMask layerMask;
     public UnityEvent onHit;
+    public UnityEvent onDestroy;
     public Transform target;
 
     private ProjectileData defaultProjectileData;
@@ -40,7 +41,7 @@ public class Projectile : MonoBehaviour, IPoolObject
     {    
         if (projectileData.lifeTime >= 0)
         {
-            ObjectPoolManager.DeSpawn(gameObject, projectileData.lifeTime);
+            Destroy(gameObject, projectileData.lifeTime);
         }
     }
 
@@ -58,7 +59,8 @@ public class Projectile : MonoBehaviour, IPoolObject
 
             if (projectileData.destroyOnHit)
             {
-                ObjectPoolManager.DeSpawn(gameObject);
+                onDestroy.Invoke();
+                Destroy(gameObject);            
             }          
         }
     }
@@ -67,15 +69,5 @@ public class Projectile : MonoBehaviour, IPoolObject
     {
         projectileData = defaultProjectileData;
         target = null;
-    }
-
-    public void OnSpawn()
-    {
-        
-    }
-
-    public void OnDeSpawn()
-    {
-        ResetProjectile();
     }
 }

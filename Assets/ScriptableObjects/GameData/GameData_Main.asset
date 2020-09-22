@@ -16,7 +16,7 @@ MonoBehaviour:
   playerShieldPrefab: {fileID: 3318915411682535362, guid: ba3f873a72565cb40b4538d4917f237a, type: 3}
   cruiserPrefab: {fileID: 5278800303536069839, guid: 54e9602704469e04c86d93c33fa331e7, type: 3}
   cruiserMinMaxSpawnInterval:
-    min: 10
+    min: 20
     max: 60
   spawningPadding: {x: 7, y: 7, z: 7}
   worldObjects:
@@ -31,9 +31,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b451f19ded977a14d99e68a5309a72cb, type: 2}
   playerClearRadius: 3
   cruiserClearRadius: 5
-  mainTheme: {fileID: 8300000, guid: d954c42a219d42d45b6117374b082226, type: 3}
-  mainThemeVolume: 0.15
-  engineAudio: {fileID: 8300000, guid: eb9c801303e33ee4c9bed4077a37958a, type: 3}
-  engineVolume: 0.5
-  shieldAudio: {fileID: 8300000, guid: 0f5d8da1ee175f14d87de5c760548e55, type: 3}
-  shieldVolume: 0.5
+  gameAudioData:
+    audioSpatialBlend: 0.5
+    mainTheme: {fileID: 8300000, guid: d954c42a219d42d45b6117374b082226, type: 3}
+    mainThemeVolume: 0.3
+    engineAudio: {fileID: 8300000, guid: eb9c801303e33ee4c9bed4077a37958a, type: 3}
+    engineVolume: 0.5
+    shieldAudio: {fileID: 8300000, guid: 0f5d8da1ee175f14d87de5c760548e55, type: 3}
+    shieldVolume: 0.5
+    cruiserMessageAudio: {fileID: 8300000, guid: 2280131b84124bb4eaa25142b2d58545, type: 3}
+    cruiserMessageVolume: 1
+    pickupAudio: {fileID: 8300000, guid: 1f0f3cbd3e6d6df48bb744e370710f74, type: 3}
+    pickupAudioVolume: 3

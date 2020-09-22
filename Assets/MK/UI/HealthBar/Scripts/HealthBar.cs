@@ -35,11 +35,15 @@ namespace MK.UI
 
         public void SetValue(float value)
         {
+            if (Slider == null) return;
+
             Slider.value = value;
         }
 
         public void SetValue(float value, string text)
         {
+            if (Slider == null) return;
+
             SetValue(value);
 
             if (Text)

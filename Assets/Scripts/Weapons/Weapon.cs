@@ -40,6 +40,6 @@ public abstract class Weapon : ScriptableObject
 
     public void PlayFireSound(Vector3 position, float volume)
     {
-        AudioManager.PlayOneShot(fireSounds.GetClip(), position, volume, pitchVariation);
+        AudioManager.PlayOneShot(fireSounds.GetClip(), position, volume, pitchVariation, GameManager.Instance.AudioData.audioSpatialBlend);
     }
 }

@@ -292,6 +292,7 @@ GameObject:
   - component: {fileID: 8518424598370012673}
   - component: {fileID: 7476992757935768049}
   - component: {fileID: 5449930466524582604}
+  - component: {fileID: 556881327116892555}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -332,8 +333,17 @@ MonoBehaviour:
   rotationTarget: {x: 0, y: 0}
   speed: 7
   rotationSpeed: 0.4
+  sprintMultiplier: 0
+  rotationSprintMultiplier: 0
+  sprintAcceleration: 0
   movementType: 0
   rotationType: 1
+  onStartSprint:
+    m_PersistentCalls:
+      m_Calls: []
+  onEndSprint:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7476992757935768051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadout:
   - {fileID: 11400000, guid: 25bbf4abb16ad084f93b7c7de2822efd, type: 2}
+  lockLoadoutSlotCount: 1
   firePositions:
   - {fileID: 7476992757398396372}
   - {fileID: 7476992758136798502}
@@ -429,6 +440,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 556881327116892555}
+        m_TargetAssemblyTypeName: MK.Audio.AudioPlayer, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 4f761f78c4ea54f49a09da01ce6fe7e7, type: 2}
+          m_ObjectArgumentAssemblyTypeName: MK.Audio.AudioContainer, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1259412537968805672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,6 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectsToSpawn: []
+  newPoolSize: 100
 --- !u!114 &3333076503964795202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +548,23 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
+--- !u!114 &556881327116892555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476992757935768063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b003aa11644170b4bb0b37da82d850c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  spatialBlend: 0.5
+  minMaxPitch:
+    min: 1
+    max: 1
 --- !u!1 &7476992758136798503
 GameObject:
   m_ObjectHideFlags: 0

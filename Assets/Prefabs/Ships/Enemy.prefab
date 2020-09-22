@@ -59,7 +59,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: health
@@ -121,6 +121,34 @@ PrefabInstance:
       propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_FloatArgument
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
+      value: MK.Audio.AudioPlayer, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_Target
+      value: 
+      objectReference: {fileID: 8051605069150616912}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
+      value: PlayOneShot
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: MK.Audio.AudioContainer, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628741761622884553, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 11400000, guid: 4f761f78c4ea54f49a09da01ce6fe7e7, type: 2}
     - target: {fileID: 7329290789501798499, guid: a97233033a3afd1468b8753ef489403f, type: 3}
       propertyPath: target
       value: 
@@ -237,5 +265,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 615da32ab4e3e2441bdaa64da76ba41d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8051605069150616912 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 556881327116892555, guid: a97233033a3afd1468b8753ef489403f, type: 3}
+  m_PrefabInstance: {fileID: 7496097249104839899}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136281457149560100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b003aa11644170b4bb0b37da82d850c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

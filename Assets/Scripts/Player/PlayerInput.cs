@@ -51,17 +51,17 @@ public class PlayerInput : MonoBehaviour
         mainCamera = Camera.main;
 
         engineAudioSource = AudioManager.Play(
-            GameManager.Instance.gameData.engineAudio,
+            GameManager.Instance.AudioData.engineAudio,
             Vector3.zero,
-            GameManager.Instance.gameData.engineVolume,
+            GameManager.Instance.AudioData.engineVolume,
             true,
             "engine"
         );
 
         shieldAudioSource = AudioManager.Play(
-            GameManager.Instance.gameData.shieldAudio,
+            GameManager.Instance.AudioData.shieldAudio,
             Vector3.zero,
-            GameManager.Instance.gameData.shieldVolume,
+            GameManager.Instance.AudioData.shieldVolume,
             true,
             "shield"
         );
@@ -153,12 +153,11 @@ public class PlayerInput : MonoBehaviour
         }
 
         // Audio
-
-        engineAudioSource.volume = GameManager.Instance.gameData.engineVolume;
+        engineAudioSource.volume = GameManager.Instance.AudioData.engineVolume * AudioManager.Instance.volumeMultiplier;
 
         float enginePitch = Vector3.Dot(Movement.Rb2D.velocity, Movement.direction);
 
         engineAudioSource.pitch = Movement.IsSprinting ? 1f : 0.3f;
-        shieldAudioSource.volume = shieldEffect.ShieldState == ShieldState.Open ? GameManager.Instance.gameData.shieldVolume : 0f;
+        shieldAudioSource.volume = shieldEffect.ShieldState == ShieldState.Open ? GameManager.Instance.AudioData.shieldVolume * AudioManager.Instance.volumeMultiplier : 0f;
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MK.Audio;
+using UnityEngine;
 
 public class PickupInteractor : MonoBehaviour
 {
@@ -14,6 +15,12 @@ public class PickupInteractor : MonoBehaviour
             if (didPickup)
             {
                 GameManager.Instance.UIManager.PromptIfEmpty(1, MK.UI.TransitionPreset.ScaleIn, pickup.iconRenderer.sprite, pickup.pickupData.pickupName);
+                AudioManager.PlayOneShot(
+                    GameManager.Instance.AudioData.pickupAudio, 
+                    transform.position, 
+                    GameManager.Instance.AudioData.pickupAudioVolume, 
+                    GameManager.Instance.AudioData.audioSpatialBlend
+                );
             }           
         }
     }

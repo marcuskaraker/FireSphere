@@ -3,8 +3,9 @@ using MK;
 using System.Collections.Generic;
 using System.Collections;
 using MK.Destructible;
+using MK.Audio;
 
-public enum GameState { None, IsRunning, GameOverSequence, MainMenu, HighScore }
+public enum GameState { None, IsRunning, GameOverSequence, MainMenu, HighScore, Options }
 
 public class GameManager : MonoBehaviorSingleton<GameManager>
 {
@@ -14,12 +15,20 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public int killCounter;
     public BoxCollider2D arenaBounds;
 
+    public float musicVolume = 1f;
+
     private List<EnemyController> enemies;
     private List<Cruiser> cruisers;
     private Vector2 playerPosLastFrame;
     private SpaceBackgroundScroller uvScroller;
 
     private List<GameObject> worldObjects;
+
+    private AudioSource musicAudioSource;
+    private bool isPlayingTestSFX;
+
+    // Other
+    private Transform worldParent;
 
     // Player
     public PlayerInput PlayerInput { get; private set; }
@@ -38,8 +47,8 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     public int[] HighScores { get; private set; }
     public string[] HighScoreNames { get; private set; }
 
-    // Other
-    private Transform worldParent;
+    // Audio
+    public GameAudioData AudioData { get; private set; }
 
     // Constants
     private const int HIGHSCORE_LIST_COUNT = 10;
@@ -79,6 +88,9 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             worldParent = new GameObject(WORLD_PARENT_NAME).transform;
         }
 
+        // Audio
+        AudioData = gameData.gameAudioData;
+
         // Init game
         LoadHighScores();
 
@@ -88,7 +100,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
     private void Start()
     {
-        MK.Audio.AudioManager.Play(gameData.mainTheme, Vector2.zero, gameData.mainThemeVolume, true, "maintheme");
+        musicAudioSource = MK.Audio.AudioManager.Play(AudioData.mainTheme, Vector2.zero, AudioData.mainThemeVolume, true, "maintheme", musicVolume);
     }
 
     private void Update()
@@ -157,20 +169,25 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
             yield return new WaitForSeconds(Random.Range(gameData.cruiserMinMaxSpawnInterval.min, gameData.cruiserMinMaxSpawnInterval.max));
             if (GameState == GameState.IsRunning)
             {
-                SpawnCruiserAtRandomPos();
-            }          
+                SpawnCruiserAtRandomPos();             
+            }
         }
     }
 
-    private void SpawnCruiserAtRandomPos()
+    private void SpawnCruiserAtRandomPos(bool showArrivalMessage = true)
     {
         cruisers.RemoveAll(x => x == null);
 
         Vector2 pos = MKUtility.GetRandomPositionInBounds(arenaBounds.bounds, gameData.spawningPadding);
         Cruiser cruiser = Instantiate(gameData.cruiserPrefab, pos, Quaternion.identity);
+
         cruisers.Add(cruiser);
 
-        UIManager.PromptIfEmpty(2f, MK.UI.TransitionPreset.ScaleIn, "An enemy cruiser has arrived!");
+        if (showArrivalMessage)
+        {
+            UIManager.PromptIfEmpty(2f, MK.UI.TransitionPreset.ScaleIn, "An enemy cruiser has arrived!");
+            AudioManager.PlayOneShot(AudioData.cruiserMessageAudio, AudioData.cruiserMessageVolume);
+        }
 
         DestroyWorldObjectsAroundPos(pos, gameData.cruiserClearRadius);
     }
@@ -371,6 +388,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         UIManager.SetMenuActive(GameState);
 
         SpawnCruiserAtRandomPos();
+        SpawnCruiserAtRandomPos(false);
         StartCoroutine(DoSpawnEnemyCruisers());
     }
 
@@ -389,11 +407,11 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
 
     private IEnumerator DoGameOver()
     {
+        GameState = GameState.GameOverSequence;
+
         float gameOverTextTime = 2f;
         float killCounterTextTime = 3f;
         float highscoreTextTime = 2f;
-
-        GameState = GameState.GameOverSequence;
 
         // Game over text
         UIManager.Prompt(gameOverTextTime, MK.UI.TransitionPreset.LeftToRight, "Game Over!");
@@ -407,7 +425,8 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         int newHighScorePlace = SaveNewScore(killCounter);
         if (newHighScorePlace >= 0)
         {
-            UIManager.Prompt(highscoreTextTime, MK.UI.TransitionPreset.LeftToRight, "New Highscore Placing! (" + (newHighScorePlace + 1) + ")");
+            int placing = (newHighScorePlace + 1);
+            UIManager.Prompt(highscoreTextTime, MK.UI.TransitionPreset.LeftToRight, "New Highscore: <color=orange>" + placing.WithSuffix() + " Place!</color>");
             yield return new WaitForSeconds(highscoreTextTime);
         }
 
@@ -418,7 +437,10 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
     #region Menu
     public void ReturnToMainMenu()
     {
-        ReturnToMainMenu(false);
+        if (GameState != GameState.GameOverSequence)
+        {
+            ReturnToMainMenu(false);
+        }
     }
 
     public void ReturnToMainMenu(bool clearGameWorld = false)
@@ -433,9 +455,7 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         GameState = GameState.MainMenu;
         UIManager.SetMenuActive(GameState);
     }
-    #endregion
 
-    #region HighScore
     public void OpenHighscoreScreen()
     {
         if (GameState != GameState.MainMenu) return;
@@ -443,6 +463,17 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
         GameState = GameState.HighScore;
         UIManager.SetMenuActive(GameState);
     }
+
+    public void OpenOptionsScreen()
+    {
+        if (GameState != GameState.MainMenu) return;
+
+        GameState = GameState.Options;
+        UIManager.SetMenuActive(GameState);
+    }
+    #endregion
+
+    #region HighScore
 
     public void LoadHighScores()
     {     
@@ -491,5 +522,31 @@ public class GameManager : MonoBehaviorSingleton<GameManager>
        
         return -1;
     }
+    #endregion  
+
+    #region Audio
+    public void SetSFXVolume(float value)
+    {
+        AudioManager.Instance.volumeMultiplier = value;
+        if (isPlayingTestSFX == false)
+        {        
+            StartCoroutine(TestPlaySFX());
+        }      
+    }
+
+    private IEnumerator TestPlaySFX()
+    {
+        isPlayingTestSFX = true;
+        AudioManager.PlayOneShot(AudioData.pickupAudio, AudioData.pickupAudioVolume);
+        yield return new WaitForSeconds(AudioData.pickupAudio.length);
+        isPlayingTestSFX = false;
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        musicVolume = value;
+        musicAudioSource.volume = AudioData.mainThemeVolume * musicVolume;
+    }
+
     #endregion
 }

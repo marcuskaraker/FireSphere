@@ -93,11 +93,11 @@ PrefabInstance:
       objectReference: {fileID: 5210353008261302369, guid: 3b6d8260de2834045b426e5401cb977a, type: 3}
     - target: {fileID: 2899162164413662226, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: health
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2899162164413662226, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: maxHealth
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8754199141092983795, guid: dde997eeaeb42894ebf8bfeda226bf56, type: 3}
       propertyPath: velocitySquaredThreshold

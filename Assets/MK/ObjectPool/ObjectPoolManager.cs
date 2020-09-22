@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.XR;
 
 namespace MK
 {
@@ -14,7 +15,7 @@ namespace MK
         /// <summary>
         /// Creates a new pool with the given pool size.
         /// </summary>
-        public static ObjectPool CreatePool<T>(T prefab, int poolSize) where T : Component
+        public static Component[] CreatePool<T>(T prefab, int poolSize) where T : Component
         {
             int poolID = prefab.gameObject.GetInstanceID();
 
@@ -30,7 +31,7 @@ namespace MK
                     AddNewObjectToPool(prefab, poolID, true);
                 }
 
-                return Instance.poolDictionary[poolID];
+                return Instance.poolDictionary[poolID].ObjectsInQueue;
             }
 
             return null;
@@ -71,11 +72,19 @@ namespace MK
             else
             {
                 // The pool doesn't exist. Create one.
-                ObjectPool pool = CreatePool(prefab, newPoolSize);
-                ObjectInstance objectToSpawn = pool.queue.Dequeue();
-                objectToSpawn.Spawn(position, rotation);
-                Debug.Log("Created new pool for " + prefab.name);
-                return objectToSpawn.Component as T;
+                CreatePool(prefab, newPoolSize);
+
+                if (Instance.poolDictionary.ContainsKey(poolKey))
+                {
+                    ObjectInstance objectToSpawn = Instance.poolDictionary[poolKey].queue.Dequeue();
+                    objectToSpawn.Spawn(position, rotation);
+                    return objectToSpawn.Component as T;
+                }
+                else
+                {
+                    Debug.LogError("Failed to create pool on spawn!");
+                    return null;
+                }
             }
         }
 
@@ -165,6 +174,22 @@ namespace MK
 
             public int PoolID { get; private set; }
             public Transform PoolParent { get; private set; }
+
+            public Component[] ObjectsInQueue
+            { 
+                get 
+                {
+                    Component[] result = new Component[queue.Count];
+                    int index = 0;
+                    foreach (ObjectInstance objectInstance in queue)
+                    {
+                        result[index] = objectInstance.Component;
+                        index++;
+                    }
+
+                    return result;
+                } 
+            }
 
             public ObjectPool(int poolID, Transform poolParent)
             {
